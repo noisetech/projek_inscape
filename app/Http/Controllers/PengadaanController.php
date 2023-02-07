@@ -261,18 +261,23 @@ class PengadaanController extends Controller
             $hasil_akhir_perhitungan_lampu  =  json_decode($hitung);
 
 
-            if ($hasil_akhir_perhitungan_lampu > "2") {
+            if ($hasil_akhir_perhitungan_lampu >= "2.0") {
+                $score = $hasil_akhir_perhitungan_lampu;
+                $Likelihoodlevel = 'Sedang';
+                $rekomendasi = 'Hasil memuaskan silahkan simpan';
+            }
+
+
+            if ($hasil_akhir_perhitungan_lampu <= "1.9") {
+                $score = $hasil_akhir_perhitungan_lampu;
+                $Likelihoodlevel = 'Rendah';
+                $rekomendasi = 'Hasil memuaskan silahkan simpan';
+            }
+
+            if ($hasil_akhir_perhitungan_lampu >= "3") {
                 $score = $hasil_akhir_perhitungan_lampu;
                 $Likelihoodlevel = 'Tinggi';
                 $rekomendasi = 'Hasil memuaskan silahkan simpan';
-            } elseif ($hasil_akhir_perhitungan_lampu > "1") {
-                $score = $hasil_akhir_perhitungan_lampu;
-                $Likelihoodlevel = 'Sedang';
-                $rekomendasi = 'Hasil belum memuaskan silahkan lakukan perhitungan kembali';
-            } else {
-                $score = $hasil_akhir_perhitungan_lampu;
-                $Likelihoodlevel = 'Rendah';
-                $rekomendasi = 'Hasil belum memuaskan silahkan lakukan perhitungan kembali';
             }
 
             $spesifikasi = $request->spesifikasi_parameter;
