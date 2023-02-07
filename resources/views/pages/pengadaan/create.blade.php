@@ -30,7 +30,7 @@
                     </div>
                     <div class="card-body">
                         <!-- table -->
-                        <form action="#" method="POST" id="tahun_form">
+                        <form action="#" method="POST" id="tahun_form" enctype="multipart/form-data">
                             @csrf
 
                             <div class="mb-3">
@@ -70,7 +70,12 @@
                             </div>
 
 
-                            <button class="btn btn-sm btn-primary mt-3" type="submit">Simpan</button>
+                            <button class="btn btn-sm btn-primary mt-3" type="submit" id="simpan">Simpan</button>
+
+                            <button class="btn btn-primary" type="button" disabled id="spinner">
+                                <span class="spinner-border spinner-border-sm" role="status"
+                                    aria-hidden="true"></span><span class="visually-hidden">Loading...</span>
+                            </button>
                         </form>
                     </div>
                 </div> <!-- .card -->
@@ -105,6 +110,10 @@
                     }
                 }
             });
+        });
+
+        $(document).ready(function(){
+            $('#spinner').hide();
         });
 
         $(document).ready(function() {
@@ -142,12 +151,14 @@
                 processData: false,
                 dataType: 'json',
                 contentType: false,
-                // beforeSend: function() {
-                //     $(document).find('span.error-text').text('');
-                // },
+                beforeSend: function() {
+                    $('#simpan').hide();
+                    $('#spinner').show();
+                },
                 success: function(data) {
                     if (data.status == 'success') {
-
+                        $('#simpan').show();
+                        $('#spinner').hide();
                         Swal.fire({
                             icon: data.status,
                             text: data.message,

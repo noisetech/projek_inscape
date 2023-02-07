@@ -179,6 +179,25 @@ class BarangController extends Controller
         ]);
     }
 
+    public function update_sub_barang(Request $request)
+    {
+
+        $sub_barang = SubBarang::find($request->id);
+        $sub_barang->barang_id = $request->barang_id;
+        $sub_barang->sub_barang = $request->sub_barang;
+        $sub_barang->slug = Str::slug($request->sub_barang);
+        $finish =    $sub_barang->save();
+
+
+        if ($finish) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data diubah',
+                'title' => 'Berhasil'
+            ]);
+        }
+    }
+
     public function hapus_sub_barang(Request $request)
     {
         $sub_barang = SubBarang::find($request->id);
@@ -337,6 +356,4 @@ class BarangController extends Controller
             ]);
         }
     }
-
-
 }

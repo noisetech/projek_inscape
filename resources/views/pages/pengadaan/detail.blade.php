@@ -36,7 +36,7 @@
 
                     @if ($pengadaan->disposisi == null)
                         <a href="{{ route('pengadaan.disposisi', $pengadaan->id) }}" class="btn btn-sm btn-primary">
-                            <i class="uil-plus-circle"></i>
+                            <i class="uil-plus-circle"></i> Disposisi Pengadaan
                         </a>
                     @else
                     @endif
@@ -118,7 +118,7 @@
                                     <div class="col-sm-4">
                                         <li class="mb-2">
                                             <div class="mb-1">
-                                                <span>Nama Direksi : {{ $dp->id }}</span>
+                                                <span>Nama Direksi : {{ $dp->nama }}</span>
                                             </div>
 
                                             <div class="mb-1">

@@ -73,7 +73,7 @@
             e.preventDefault();
             const fd = new FormData(this);
             $.ajax({
-                url: '{{ route('paramater.update') }}',
+                url: '{{ route('update.sub_barang') }}',
                 method: 'post',
                 data: fd,
                 cache: false,
@@ -94,7 +94,8 @@
                             showConfirmButton: false,
                         });
                         setTimeout(function() {
-                            window.top.location = "{{ route('barang.detail', $sub_barang->barang->id) }}"
+                            window.top.location =
+                                "{{ route('barang.detail', $sub_barang->barang->id) }}"
                         }, 1500);
                     } else {
                         $.each(data.error, function(prefix, val) {
