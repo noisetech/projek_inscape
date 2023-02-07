@@ -359,7 +359,21 @@
                             $('.button_simpan').empty();
                         }
 
-                        if (data.score <= '2') {
+                        if (data.score >= '1.1') {
+                            $('.spesifikasi_parameter').empty();
+                            $('.hasil_ss').empty();
+
+                            $('.hasil_ss').append(
+                                '<div class="mb-2"><label class="form-label">Score Impact Level:</label><input class="form-control" name="score_impact_level" readonly value="' +
+                                data.score +
+                                '"></div><div class="mb-2"><label class="form-label">Impact Level:</label><input name="impact_level" class="form-control" readonly value="' +
+                                data.impact_level +
+                                '"></div><div class="mb-2"><label class="form-label">Rekomendasi Screening:</label><input name="rekomendasi.ss" class="form-control" readonly value="' +
+                                data.rekomendasi + '"></div>');
+                            $('.button_simpan').empty();
+                        }
+
+                        if (data.score >= '2.1') {
                             $('.spesifikasi_parameter').empty();
                             $('.hasil_ss').empty();
                             $('.hasil_ss').append(
@@ -370,6 +384,37 @@
                                 '"></div><div class="mb-2"><label class="form-label">Rekomendasi Screening:</label><input name="rekomendasi.ss" class="form-control" readonly value="' +
                                 data.rekomendasi + '"></div>');
                             $('.button_simpan').empty();
+                        }
+
+                        if (data.score > '3.1') {
+                            $('.spesifikasi_parameter').empty();
+                            $('.hasil_ss').empty();
+
+                            $('.hasil_ss').append(
+                                '<div class="mb-2"><label class="form-label">Score Impact Level:</label><input class="form-control" name="score_impact_level" readonly value="' +
+                                data.score +
+                                '"></div><div class="mb-2"><label class="form-label">Impact Level:</label><input name="impact_level" class="form-control" readonly value="' +
+                                data.impact_level +
+                                '"></div><div class="mb-2"><label class="form-label">Rekomendasi Screening:</label><input name="rekomendasi.ss" class="form-control" readonly value="' +
+                                data.rekomendasi + '"></div>');
+                            $('.button_simpan').empty();
+                        }
+
+                        if (data.score > '4.1') {
+                            $('.spesifikasi_parameter').empty();
+                            $('.hasil_ss').empty();
+                            $('.button_simpan').empty();
+                            $('.button_simpan').append(
+                                '<button class="btn mt-2 btn-sm btn-primary simpan_detail_pengadaan" type="submit">Simpan</button>'
+                            );
+                            $('.hasil_ss').append(
+                                '<div class="mb-2"><label class="form-label">Score Impact Level:</label><input class="form-control" name="score_impact_level" readonly value="' +
+                                data.score +
+                                '"></div><div class="mb-2"><label class="form-label">Impact Level:</label><input name="impact_level" class="form-control" readonly value="' +
+                                data.impact_level +
+                                '"></div><div class="mb-2"><label class="form-label">Rekomendasi Screening:</label><input name="rekomendasi.ss" class="form-control" readonly value="' +
+                                data.rekomendasi + '"></div>');
+
                         }
                     }
 

@@ -257,7 +257,8 @@ class PengadaanController extends Controller
 
             $total_hitung_perkalian_lampu = array_sum($perkalian);
             $total_bobot_lampu = array_sum($bahan_hitung_bobot_lampu);
-            $hasil_akhir_perhitungan_lampu  =  json_encode($total_hitung_perkalian_lampu / $total_bobot_lampu);
+            $hitung = number_format($total_hitung_perkalian_lampu / $total_bobot_lampu, 2);
+            $hasil_akhir_perhitungan_lampu  =  json_decode($hitung);
 
 
             if ($hasil_akhir_perhitungan_lampu > "2") {
@@ -303,7 +304,8 @@ class PengadaanController extends Controller
 
         $total_hitung_perkalian_baterai = array_sum($perkalian);
         $total_bobot_baterai = array_sum($bahan_hitung_bobot_baterai);
-        $hasil_akhir_perhitungan_baterai  =  json_encode($total_hitung_perkalian_baterai / $total_bobot_baterai);
+        $hitung_baterai = number_format($total_hitung_perkalian_baterai / $total_bobot_baterai, 2);
+        $hasil_akhir_perhitungan_baterai  =  json_decode($hitung_baterai);
 
         if ($hasil_akhir_perhitungan_baterai <= "1.0") {
             $score = $hasil_akhir_perhitungan_baterai;
@@ -335,7 +337,7 @@ class PengadaanController extends Controller
 
             $score = $hasil_akhir_perhitungan_baterai;
             $impact_level = 'Sangat Signifikan';
-            $rekomendasi = 'Hasil belum memuaskan silahkan lakukan perhitungan kembali';
+            $rekomendasi = 'Hasil  memuaskan silahkan simpan';
         }
 
 
