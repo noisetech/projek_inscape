@@ -47,7 +47,7 @@
                                 <div class="row">
                                     <div class="col-sm 12 col-md-12 col-lg-12 col-xl-12 mb-3">
                                         <label>Level</label>
-                                        <input type="text" class="form-control" name="sub_barang"
+                                        <input type="text" class="form-control" name="level"
                                             value="{{ $spesifikasi_parameter->level }}">
                                         <div class="invalid-feedback"> Please use a valid email </div>
                                     </div>

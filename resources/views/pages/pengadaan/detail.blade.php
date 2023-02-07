@@ -307,51 +307,69 @@
                 //     $(document).find('span.error-text').text('');
                 // },
                 success: function(data) {
-                    if (data.score < '2') {
-                        $('.spesifikasi_parameter').empty();
-                        $('.hasil_ss').empty();
-                        $('.hasil_ss').append(
-                            '<div class="mb-2"><label class="form-label">Score Shortlist Screening:</label><input class="form-control" name="score_ss" readonly value="' +
-                            data.score +
-                            '"></div><div class="mb-2"><label class="form-label">Likehood Shortlist Level Screening:</label><input name="like_hood_ss" class="form-control" readonly value="' +
-                            data.likelihood_level +
-                            '"></div><div class="mb-2"><label class="form-label">Rekomendasi Screening:</label><input name="rekomendasi.ss" class="form-control" readonly value="' +
-                            data.rekomendasi + '"></div>');
-                        $('.button_simpan').empty();
+                    if (data.jenis_barang == "lampu") {
+                        if (data.score < '3') {
+                            $('.spesifikasi_parameter').empty();
+                            $('.hasil_ss').empty();
+                            $('.hasil_ss').append(
+                                '<div class="mb-2"><label class="form-label">Score Shortlist Screening:</label><input class="form-control" readonly value="' +
+                                data.score +
+                                '"></div><div class="mb-2"><label class="form-label">Likehood Shortlist Level Screening:</label><input class="form-control" readonly value="' +
+                                data.likelihood_level +
+                                '"></div><div class="mb-2"><label class="form-label">Rekomendasi Screening:</label><input class="form-control" readonly value="' +
+                                data.rekomendasi + '"></div>');
+                            $('.button_simpan').empty();
+                        }
+
+                        if (data.score == '3') {
+                            $('.hasil_ss').empty();
+                            $('.button_simpan').empty();
+                            $('.button_simpan').append(
+                                '<button class="btn mt-2 btn-sm btn-primary simpan_detail_pengadaan" type="submit">Simpan</button>'
+                            );
+                            $('.hasil_ss').append(
+                                '<div class="mb-2"><label class="form-label">Score Shortlist Screening:</label><input class="form-control" name="score_ss" readonly value="' +
+                                data.score +
+                                '"></div><div class="mb-2"><label class="form-label">Likehood Shortlist Level Screening:</label><input name="like_hood_ss" class="form-control" readonly value="' +
+                                data.likelihood_level +
+                                '"></div><div class="mb-2"><label class="form-label">Rekomendasi Screening:</label><input name="rekomendasi.ss" class="form-control" readonly value="' +
+                                data.rekomendasi + '"></div>');
+
+
+                            for (let index = 0; index < data.spesifikasi_parameter_id.length; index++) {
+                                $('.spesifikasi_parameter').append(
+                                    '<input type="hidden" name="spesifikasi[]" value="' + data
+                                    .spesifikasi_parameter_id[index] + '"></input>')
+                            }
+                        }
                     }
 
-                    if (data.score >= '2') {
-                        $('.spesifikasi_parameter').empty();
-                        $('.hasil_ss').empty();
-                        $('.hasil_ss').append(
-                            '<div class="mb-2"><label class="form-label">Score Shortlist Screening:</label><input class="form-control" readonly value="' +
-                            data.score +
-                            '"></div><div class="mb-2"><label class="form-label">Likehood Shortlist Level Screening:</label><input class="form-control" readonly value="' +
-                            data.likelihood_level +
-                            '"></div><div class="mb-2"><label class="form-label">Rekomendasi Screening:</label><input class="form-control" readonly value="' +
-                            data.rekomendasi + '"></div>');
-                        $('.button_simpan').empty();
-                    }
+                    if (data.jenis_barang == "baterai") {
+                        if (data.score <= '1') {
 
-                    if (data.score >= '2.5') {
-                        $('.hasil_ss').empty();
-                        $('.button_simpan').empty();
-                        $('.button_simpan').append(
-                            '<button class="btn mt-2 btn-sm btn-primary simpan_detail_pengadaan" type="submit">Simpan</button>'
-                        );
-                        $('.hasil_ss').append(
-                            '<div class="mb-2"><label class="form-label">Score Shortlist Screening:</label><input class="form-control" name="score_ss" readonly value="' +
-                            data.score +
-                            '"></div><div class="mb-2"><label class="form-label">Likehood Shortlist Level Screening:</label><input name="like_hood_ss" class="form-control" readonly value="' +
-                            data.likelihood_level +
-                            '"></div><div class="mb-2"><label class="form-label">Rekomendasi Screening:</label><input name="rekomendasi.ss" class="form-control" readonly value="' +
-                            data.rekomendasi + '"></div>');
+                            $('.spesifikasi_parameter').empty();
+                            $('.hasil_ss').empty();
+                            $('.hasil_ss').append(
+                                '<div class="mb-2"><label class="form-label">Score Impact Level:</label><input class="form-control" name="score_impact_level" readonly value="' +
+                                data.score +
+                                '"></div><div class="mb-2"><label class="form-label">Impact Level:</label><input name="impact_level" class="form-control" readonly value="' +
+                                data.impact_level +
+                                '"></div><div class="mb-2"><label class="form-label">Rekomendasi Screening:</label><input name="rekomendasi.ss" class="form-control" readonly value="' +
+                                data.rekomendasi + '"></div>');
+                            $('.button_simpan').empty();
+                        }
 
-
-                        for (let index = 0; index < data.spesifikasi_parameter_id.length; index++) {
-                            $('.spesifikasi_parameter').append(
-                                '<input type="hidden" name="spesifikasi[]" value="' + data
-                                .spesifikasi_parameter_id[index] + '"></input>')
+                        if (data.score <= '2') {
+                            $('.spesifikasi_parameter').empty();
+                            $('.hasil_ss').empty();
+                            $('.hasil_ss').append(
+                                '<div class="mb-2"><label class="form-label">Score Impact Level:</label><input class="form-control" name="score_impact_level" readonly value="' +
+                                data.score +
+                                '"></div><div class="mb-2"><label class="form-label">Impact Level:</label><input name="impact_level" class="form-control" readonly value="' +
+                                data.impact_level +
+                                '"></div><div class="mb-2"><label class="form-label">Rekomendasi Screening:</label><input name="rekomendasi.ss" class="form-control" readonly value="' +
+                                data.rekomendasi + '"></div>');
+                            $('.button_simpan').empty();
                         }
                     }
 
@@ -391,7 +409,7 @@
         $('.barang').change(function() {
 
             let bahan_barang_id = $('.barang').val();
-
+            $('.button_simpan').empty();
 
 
             $('.button_hitung').empty();

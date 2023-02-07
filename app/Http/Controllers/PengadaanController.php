@@ -128,30 +128,12 @@ class PengadaanController extends Controller
             $direksi->save();
         }
 
-        $bahan = [
-            [
-                'pengadaan_id' => $pengadaan->id,
-                'step' => 'B.1',
-                'deskripsi' => Auth::user()->name . ' ' . 'membuat pengadaan barang',
-                'status' => '0'
-            ],
-            [
-                'pengadaan_id' => $pengadaan->id,
-                'step' => 'B.1',
-                'dreskripsi' => Auth::user()->name . '' . 'membuat pengadaan barang',
-                'status' => '1'
-            ]
-        ];
 
-        $finish =   $step =   StepPengadaan::insert($bahan);
-
-        if ($finish) {
-            return response()->json([
-                'status' => 'success',
-                'title' => 'Berhasil',
-                'message' => 'Data ditambah'
-            ]);
-        }
+        return response()->json([
+            'status' => 'success',
+            'title' => 'Berhasil',
+            'message' => 'Data ditambah'
+        ]);
     }
 
     public function detail($id)
@@ -247,47 +229,47 @@ class PengadaanController extends Controller
 
         $barang = Barang::where('id', $request->barang_id)->first();
 
-        if ($barang->nama_barang == 'lampu' || $barang->nama_barang == 'Lampu' || $barang->nama_barang == 'LAMPU' ) {
-            $bahan_id_parameter = SpesifikasiParameter::whereIn('id', ($request->spesifikasi_parameter))->pluck('parameter_barang_id');
+        if ($barang->nama_barang == 'lampu' || $barang->nama_barang == 'Lampu' || $barang->nama_barang == 'LAMPU') {
+            $bahan_id_parameter_lampu = SpesifikasiParameter::whereIn('id', ($request->spesifikasi_parameter))->pluck('parameter_barang_id');
 
-            $parameter = ParameterBarang::whereIn('id', $bahan_id_parameter)->get();
+            $parameter_lampu = ParameterBarang::whereIn('id', $bahan_id_parameter_lampu)->get();
 
-            $spesifikasi = SpesifikasiParameter::whereIn('id', $request->spesifikasi_parameter)->get();
+            $spesifikasi_lampu = SpesifikasiParameter::whereIn('id', $request->spesifikasi_parameter)->get();
 
 
 
-            $bahan_hitung_bobot = [];
-            foreach ($parameter as $key => $value) {
-                $bahan_hitung_bobot[] = $value['bobot'];
+            $bahan_hitung_bobot_lampu = [];
+            foreach ($parameter_lampu as $key => $value) {
+                $bahan_hitung_bobot_lampu[] = $value['bobot'];
             }
 
-            $bahan_hitung_sepsifikasi = [];
+            $bahan_hitung_sepsifikasi_lampu = [];
 
-            foreach ($spesifikasi as $key2 => $value2) {
-                $bahan_hitung_sepsifikasi[] = $value2['level'];
+            foreach ($spesifikasi_lampu as $key2 => $value2) {
+                $bahan_hitung_sepsifikasi_lampu[] = $value2['level'];
             }
 
 
             $perkalian = array_map(function ($v1, $v2) {
                 return $v1 * $v2;
-            }, $bahan_hitung_bobot, $bahan_hitung_sepsifikasi);
+            }, $bahan_hitung_bobot_lampu, $bahan_hitung_sepsifikasi_lampu);
 
 
-            $total_hitung_perkalian = array_sum($perkalian);
-            $total_bobot = array_sum($bahan_hitung_bobot);
-            $hasil_akhir_perhitungan  =  json_encode($total_hitung_perkalian / $total_bobot);
+            $total_hitung_perkalian_lampu = array_sum($perkalian);
+            $total_bobot_lampu = array_sum($bahan_hitung_bobot_lampu);
+            $hasil_akhir_perhitungan_lampu  =  json_encode($total_hitung_perkalian_lampu / $total_bobot_lampu);
 
 
-            if ($hasil_akhir_perhitungan > "2") {
-                $score = $hasil_akhir_perhitungan;
+            if ($hasil_akhir_perhitungan_lampu > "2") {
+                $score = $hasil_akhir_perhitungan_lampu;
                 $Likelihoodlevel = 'Tinggi';
                 $rekomendasi = 'Hasil memuaskan silahkan simpan';
-            } elseif ($hasil_akhir_perhitungan > "1") {
-                $score = $hasil_akhir_perhitungan;
+            } elseif ($hasil_akhir_perhitungan_lampu > "1") {
+                $score = $hasil_akhir_perhitungan_lampu;
                 $Likelihoodlevel = 'Sedang';
                 $rekomendasi = 'Hasil belum memuaskan silahkan lakukan perhitungan kembali';
             } else {
-                $score = $hasil_akhir_perhitungan;
+                $score = $hasil_akhir_perhitungan_lampu;
                 $Likelihoodlevel = 'Rendah';
                 $rekomendasi = 'Hasil belum memuaskan silahkan lakukan perhitungan kembali';
             }
@@ -295,8 +277,73 @@ class PengadaanController extends Controller
             $spesifikasi = $request->spesifikasi_parameter;
 
 
-            return response()->json(['spesifikasi_parameter_id' => $spesifikasi, 'score' => $score, 'likelihood_level' => $Likelihoodlevel, 'rekomendasi' => $rekomendasi]);
+            return response()->json(['spesifikasi_parameter_id' => $spesifikasi, 'score' => $score,  'jenis_barang' => $barang->nama_barang,  'likelihood_level' => $Likelihoodlevel, 'rekomendasi' => $rekomendasi]);
         }
+
+        $bahan_id_parameter_baterai = SpesifikasiParameter::whereIn('id', ($request->spesifikasi_parameter))->pluck('parameter_barang_id');
+
+        $parameter_baterai = ParameterBarang::whereIn('id', $bahan_id_parameter_baterai)->get();
+
+        $spesifikasi_baterai = SpesifikasiParameter::whereIn('id', $request->spesifikasi_parameter)->get();
+
+        $bahan_hitung_bobot_baterai = [];
+        foreach ($parameter_baterai as $key_parameter_baterai => $value_parameter_baterai) {
+            $bahan_hitung_bobot_baterai[] = $value_parameter_baterai['bobot'];
+        }
+
+        $bahan_hitung_sepsifikasi_baterai = [];
+
+        foreach ($spesifikasi_baterai as $key_spesifikasi_baterai => $value_spesifikasi_baterai) {
+            $bahan_hitung_sepsifikasi_baterai[] = $value_spesifikasi_baterai['level'];
+        }
+
+        $perkalian = array_map(function ($v3, $v4) {
+            return $v3 * $v4;
+        }, $bahan_hitung_bobot_baterai, $bahan_hitung_sepsifikasi_baterai);
+
+        $total_hitung_perkalian_baterai = array_sum($perkalian);
+        $total_bobot_baterai = array_sum($bahan_hitung_bobot_baterai);
+        $hasil_akhir_perhitungan_baterai  =  json_encode($total_hitung_perkalian_baterai / $total_bobot_baterai);
+
+        if ($hasil_akhir_perhitungan_baterai <= "1.0") {
+            $score = $hasil_akhir_perhitungan_baterai;
+            $impact_level = 'Tidak signifikan';
+            $rekomendasi = 'Hasil belum memuaskan silahkan lakukan perhitungan kembali';
+        }
+
+        if ($hasil_akhir_perhitungan_baterai >= "1.1") {
+            $score = $hasil_akhir_perhitungan_baterai;
+            $impact_level = 'Minor';
+            $rekomendasi = 'Hasil belum memuaskan silahkan lakukan perhitungan kembali';
+        }
+
+        if ($hasil_akhir_perhitungan_baterai >= "2.1") {
+
+            $score = $hasil_akhir_perhitungan_baterai;
+            $impact_level = 'Medium';
+            $rekomendasi = 'Hasil belum memuaskan silahkan lakukan perhitungan kembali';
+        }
+
+        if ($hasil_akhir_perhitungan_baterai >= "3.1") {
+
+            $score = $hasil_akhir_perhitungan_baterai;
+            $impact_level = 'Signifikan';
+            $rekomendasi = 'Hasil belum memuaskan silahkan lakukan perhitungan kembali';
+        }
+
+        if ($hasil_akhir_perhitungan_baterai >= "4.1") {
+
+            $score = $hasil_akhir_perhitungan_baterai;
+            $impact_level = 'Sangat Signifikan';
+            $rekomendasi = 'Hasil belum memuaskan silahkan lakukan perhitungan kembali';
+        }
+
+
+
+
+        $spesifikasi2 = $request->spesifikasi_parameter;
+
+        return response()->json(['spesifikasi_parameter_id' => $spesifikasi2, 'score' => $score, 'impact_level' => $impact_level, 'jenis_barang' => $barang->nama_barang, 'rekomendasi' => $rekomendasi]);
     }
 
     public function ceklist_direksi(Request $request)
@@ -331,7 +378,7 @@ class PengadaanController extends Controller
         $pengadaan_detail->save();
     }
 
-    public function disposisi(Request $request){
-
+    public function disposisi(Request $request)
+    {
     }
 }

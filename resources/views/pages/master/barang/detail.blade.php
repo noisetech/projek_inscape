@@ -49,16 +49,15 @@
                                                 <a class="btn btn-sm btn-outline-danger hapus_sub_barang mx-1"
                                                     style="font-size: 10px;" id="{{ $sb->id }}"><i
                                                         class="uil-trash-alt text-dark"></i></a>
-8f5a46187d0b8eb2ec8f4d695540d85ce9f1e
+                                            </div>
                                         </div>
-                                    </div>
                                 @endforeach
                             </div>
 
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div class="d-flex justify-content-between align-items-center mt-3 mx-3">
                         <span style="font-size: 10px;">List parameter barang:</span>
                         <a href="{{ route('barang.createparameter', $barang->slug) }}" class="btn btn-sm btn-primary">
                             <i class="uil-plus-circle"></i>
@@ -173,7 +172,6 @@
 
 @push('checkall')
     <script src="{{ asset('backend/assets/js/jquery-check-all.js') }}"></script>
-
 @endpush
 
 @push('script')

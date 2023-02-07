@@ -308,6 +308,7 @@ class BarangController extends Controller
     {
         $spesifikasi_parameter = SpesifikasiParameter::find($request->id);
         $spesifikasi_parameter->parameter_barang_id = $request->parameter_barang_id;
+        $spesifikasi_parameter->level = $request->level;
         $spesifikasi_parameter->spesifikasi = $request->spesifikasi;
         $spesifikasi_parameter->slug = Str::slug($request->spesifikasi);
         $finish = $spesifikasi_parameter->save();
@@ -335,9 +336,4 @@ class BarangController extends Controller
             ]);
         }
     }
-
-
-
-
-
 }
