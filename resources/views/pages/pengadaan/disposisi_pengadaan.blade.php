@@ -24,7 +24,7 @@
                             <li class="breadcrumb-item active">Pengadaan</li>
                         </ol>
                     </div>
-                    <h4 class="page-title">Jenis Pengadaan</h4>
+                    <h4 class="page-title">Disposisi Pengadaan</h4>
                 </div>
             </div>
         </div>
@@ -38,10 +38,10 @@
                     <input type="hidden" name="id" value="{{ $pengadaan->id }}">
 
                     <div class="mb-3">
-                        <label for="" class="form-label">List Jenis Pengadaan</label>
-                        <select name="jenis" class="form-select">
-                            <option value="pengadaan barang">Pengadaan barang</option>
-                            <option value="pengadaan konstruksi">Pengadaan konstruksi</option>
+                        <label for="" class="form-label">List Disposisi</label>
+                        <select name="disposisi" class="form-select">
+                            <option value="bidang pku">Bidang PKU</option>
+                            <option value="pejabat pelaksana">Pejabat Pelaksana</option>
                         </select>
                     </div>
 
@@ -65,7 +65,7 @@
             e.preventDefault();
             const fd = new FormData(this);
             $.ajax({
-                url: '{{ route('pengadaan.update_jenis') }}',
+                url: '{{ route('pengadaan_disposisi.update') }}',
                 method: 'post',
                 data: fd,
                 cache: false,

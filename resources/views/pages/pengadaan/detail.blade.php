@@ -34,9 +34,14 @@
             <div class="card-header">
                 <div class="d-flex justify-content-end align-items-center">
 
-                    <a href="{{ route('pengadaan.create') }}" class="btn btn-sm btn-primary">
-                        <i class="uil-plus-circle"></i> Disposisi pengadaan
-                    </a>
+                    @if ($pengadaan->disposisi == null)
+                        <a href="{{ route('pengadaan.disposisi', $pengadaan->id) }}" class="btn btn-sm btn-primary">
+                            <i class="uil-plus-circle"></i>
+                        </a>
+                    @else
+                    @endif
+
+
                 </div>
             </div>
             <div class="card-body">
@@ -45,7 +50,11 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <span>Detail pengadaan</span>
 
-                            <a href="" class="btn btn-sm btn-primary"><i class="uil-edit"></i> jenis pengadaan</a>
+                            @if ($pengadaan->jenis == null)
+                                <a href="{{ route('pengadaan.edit_jenis', $pengadaan->id) }}"
+                                    class="btn btn-sm btn-primary"><i class="uil-edit"></i> jenis pengadaan</a>
+                            @else
+                            @endif
                         </div>
                     </div>
                     <div class="card-body">
@@ -67,6 +76,17 @@
                                     Dokumen Nota
                                     Dinas</a></span>
                         </div>
+
+                        <div class="mb-2">
+                            <span>Disposisi Pengadaan:
+                                {{ $pengadaan->disposisi != null ? Str::upper($pengadaan->disposisi) : '-' }}</span>
+                        </div>
+
+                        <div class="mb-2">
+                            <span>Jenis Pengadaan:
+                                {{ $pengadaan->jenis != null ? Str::upper($pengadaan->jenis) : '-' }}</span>
+                        </div>
+
 
 
                         <div class="mb-2">

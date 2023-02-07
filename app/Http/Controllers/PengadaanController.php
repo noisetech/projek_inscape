@@ -8,14 +8,10 @@ use App\ParameterBarang;
 use App\Pengadaan;
 use App\PengadaanDetail;
 use App\SpesifikasiParameter;
-use App\SpesifikasiSubBarang;
-use App\StepPengadaan;
 use App\SubBarang;
 use App\Tahun;
 use App\Unit;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class PengadaanController extends Controller
@@ -385,7 +381,53 @@ class PengadaanController extends Controller
         $pengadaan_detail->save();
     }
 
-    public function disposisi(Request $request)
+    public function disposisi($id)
     {
+        $pengadaan = Pengadaan::find($id);
+
+        return view('pages.pengadaan.disposisi_pengadaan', [
+            'pengadaan' => $pengadaan
+        ]);
+    }
+
+    public function update_disposisi(Request $request)
+    {
+        $finish = Pengadaan::where('id', $request->id)
+            ->update([
+                'disposisi' => $request->disposisi
+            ]);
+
+        if ($finish) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Pengadaan telah disposisikan',
+                'title' => 'Berhasil'
+            ]);
+        }
+    }
+
+    public function edit_jenis_pengadaan($id)
+    {
+        $pengadaan = Pengadaan::find($id);
+
+        return view('pages.pengadaan.edit_jenis_pengadaan', [
+            'pengadaan' => $pengadaan
+        ]);
+    }
+
+    public function update_jenis_pengadaan(Request $request)
+    {
+        $finish = Pengadaan::where('id', $request->id)
+            ->update([
+                'jenis' => $request->jenis
+            ]);
+
+        if ($finish) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Jenis pengadaan diubah',
+                'title' => 'Berhasil'
+            ]);
+        }
     }
 }

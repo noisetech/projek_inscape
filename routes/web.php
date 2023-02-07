@@ -199,7 +199,14 @@ Route::prefix('dashboard')
             ->name('ceklist_direksi');
         Route::post('pengadaa.simpan_pengadaan_detail', 'PengadaanController@simpan_pengadaan_detail')
             ->name('pengadaan.simpan_pengadaan_detail');
-
+        Route::get('pengadaan/disposisi/{id}', 'PengadaanController@disposisi')
+            ->name('pengadaan.disposisi');
+        Route::post('pengadaan.disposisi_update', 'PengadaanController@update_disposisi')
+            ->name('pengadaan_disposisi.update');
+        Route::get('pengadaan/edit_jenis/{id}', 'PengadaanController@edit_jenis_pengadaan')
+            ->name('pengadaan.edit_jenis');
+        Route::post('pengadaan.update_jenis_pengadaan', 'PengadaanController@update_jenis_pengadaan')
+            ->name('pengadaan.update_jenis');
         // sortlist
         Route::post('hitung.shortlist', 'PengadaanController@hitung')
             ->name('hitung');

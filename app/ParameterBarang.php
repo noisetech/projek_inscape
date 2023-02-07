@@ -18,8 +18,5 @@ class ParameterBarang extends Model
         return $this->hasMany(SpesifikasiParameter::class);
     }
 
-    public function spesifikasi_sub_barang_pengadaan()
-    {
-        return $this->belongsToMany(SpesifikasiSubBarangPengadaan::class, 'spesifikasi_sub_barang_pengadaan', 'pengadaan_id', 'spesifikasi_parameter_id');
-    }
+
 }

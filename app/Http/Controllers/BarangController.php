@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Barang;
 use App\ParameterBarang;
+use App\Pengadaan;
 use App\SpesifikasiParameter;
 use App\SpesifikasiSubBarang;
 use App\SubBarang;
@@ -336,4 +337,6 @@ class BarangController extends Controller
             ]);
         }
     }
+
+
 }
