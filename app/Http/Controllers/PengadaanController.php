@@ -58,7 +58,8 @@ class PengadaanController extends Controller
                     ->make('true');
             }
 
-            // kalo yang login adalah users, pengawas, bidang pku, manager
+            // kalo yang login selain dari admin
+            // maka ambil pengadaan berdasarkan unit yang dimiliki
             if (Auth::user()->getRoleNames() != 'admin') {
 
                 $unit_users = Unit::whereHas('users', function ($q) {
@@ -66,10 +67,6 @@ class PengadaanController extends Controller
                 })->first();
 
                 $data = Pengadaan::where('unit_id', $unit_users->id)->get();
-
-
-
-
                 return datatables()->of($data)
                     ->addColumn('unit', function ($data) {
                         return $data->unit->unit;
@@ -78,17 +75,30 @@ class PengadaanController extends Controller
                         return $data->tahun->tahun;
                     })
                     ->addColumn('aksi', function ($data) {
-                        $button = '<div class="btn-group mb-2">
-                    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>';
+                        // set permission ketika user bisa pengadaan detail dan pengadaan hapus
+                        if (auth()->user()->can('pengadaan.detail') && auth()->user()->can('pengadaan.hapus')) {
+                            $button = '<div class="btn-group mb-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>';
 
-                        $button .= ' <div class="dropdown-menu">
-                    <a class="dropdown-item" href="' . route('pengdaan.detail', $data->id) . '"><i class="uil-pen"></i><span> Detail </span></a>';
+                            $button .= ' <div class="dropdown-menu">
+                            <a class="dropdown-item" href="' . route('pengdaan.detail', $data->id) . '"><i class="uil-pen"></i><span> Detail </span></a>';
 
-                        $button .= '<a class="dropdown-item hapus" id="' . $data->id . '" href="#"><i class="uil-trash-alt"></i><span> Hapus </span></a>
-                    </div>
-                </div>';
+                            $button .= '<a class="dropdown-item hapus" id="' . $data->id . '" href="#"><i class="uil-trash-alt"></i><span> Hapus </span></a>
+                            </div>
+                        </div>';
 
-                        return $button;
+                            return $button;
+                        }
+                        // set permission ketika user hanya bisa pengadaan detail
+                        if (auth()->user()->can('pengadaan.detail')) {
+                            $button = '<div class="btn-group mb-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>';
+
+                            $button .= ' <div class="dropdown-menu">
+                            <a class="dropdown-item" href="' . route('pengdaan.detail', $data->id) . '"><i class="uil-pen"></i><span> Detail </span></a></div></div>';
+
+                            return $button;
+                        }
                     })
 
 

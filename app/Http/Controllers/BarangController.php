@@ -11,6 +11,7 @@ use App\SubBarang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class BarangController extends Controller
@@ -57,6 +58,26 @@ class BarangController extends Controller
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'nama_barang' => 'required',
+            'gambar' => 'required|file|mimes:png,jpg,jpeg|max:2048',
+            'deskripsi' => 'required'
+        ], [
+            'nama_barang.required' => 'tidak boleh kosong',
+            'gambar.required' => 'tidak boleh kosong',
+            'deskripsi.required' => 'tidak boleh kosong',
+            'gambar.file' => 'harus berupa file',
+            'gambar.mimes' => 'harus file gambar berupa png, jpg, jpeg',
+            'gambar.max' => 'maksimal 2MB'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'error' => $validator->errors()->toArray()
+            ]);
+        }
+
         $file = $request->file('gambar');
 
         $path = Storage::disk('s3')->put('gambar_barang', $file, $file->hashName());

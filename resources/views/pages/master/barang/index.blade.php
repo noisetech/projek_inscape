@@ -38,9 +38,9 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h4>List Barang</h4>
 
-                    <a href="{{ route('barang.create') }}" class="btn btn-sm btn-primary">
-                        <i class="uil-plus-circle"></i>
-                    </a>
+                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modal_tambah_barang">
+                        <i class="uil-plus-circle"></i> Tambah Barang
+                    </button>
                 </div>
             </div>
             <div class="card-body">
@@ -70,6 +70,47 @@
             </div>
         </div> <!-- .card -->
     </div> <!-- .container-fluid -->
+
+
+    <div id="modal_tambah_barang" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="fullWidthModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-full-width">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="fullWidthModalLabel">Tambah Barang</h4>
+                    <button type="button" class="btn-close" id="close_atas_tambah_barang"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="#" method="POST" id="tambah_barang" enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="" class="form-label">Nama Barang:</label> <sup class="text-danger">*</sup>
+                            <input type="text" name="nama_barang" class="form-control">
+                            <span class="text-danger error-text nama_barang_error"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="" class="form-label">Gambar Barang:</label> <sup class="text-danger">*</sup>
+                            <input type="file" name="gambar" class="form-control">
+                            <span class="text-danger error-text gambar_error"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="" class="form-label">Deskripsi Barang:</label> <sup
+                                class="text-danger">*</sup>
+                            <textarea name="deskripsi" cols="30" rows="10" class="form-control"></textarea>
+                            <span class="text-danger error-text deskripsi_error"></span>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" id="close_bawah_tambah_barang">Batal</button>
+                            <button type="submit" class="btn btn-primary" id="btn_tambah_barang">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 @endsection
 
 @push('script')
@@ -110,6 +151,64 @@
             });
         });
 
+        $('#close_atas_tambah_barang').on('click', function() {
+            $('#modal_tambah_barang').modal('hide');
+        });
+
+
+        $('#close_bawah_tambah_barang').on('click', function() {
+            $('#modal_tambah_barang').modal('hide');
+            $(document).find('span.error-text').empty();
+        });
+
+        $('#modal_tambah_barang').on('hidden.bs.modal', function(e) {
+            $("#modal_tambah_barang").modal('hide');
+            $('#tambah_barang')[0].reset();
+            $("#btn_tambah_barang").text('Simpan');
+            $(document).find('span.error-text').empty();
+
+        });
+
+
+        $("#tambah_barang").submit(function(e) {
+            e.preventDefault();
+            const fd = new FormData(this);
+            $.ajax({
+                url: '{{ route('barang.store') }}',
+                method: 'post',
+                data: fd,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+                contentType: false,
+                beforeSend: function() {
+                    $(document).find('span.error-text').text('');
+                },
+                success: function(data) {
+                    if (data.status == 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            text: 'Data telah disimpan',
+                            title: 'Berhasil',
+                            timer: 1500,
+                            showConfirmButton: false,
+                        });
+                        $("#modal_tambah_barang").modal('hide');
+                        $('#dataTable').DataTable().ajax.reload();
+                        $('#tambah_barang')[0].reset();
+                        $("#btn_tambah_barang").text('Simpan');
+                        $(document).find('span.error-text').empty();
+
+
+                    } else {
+                        $.each(data.error, function(prefix, val) {
+                            $('span.' + prefix + '_error').text(val[0]);
+                        });
+                    }
+
+                }
+            });
+        });
 
         $(document).on('click', '.hapus', function(e) {
             e.preventDefault();
