@@ -112,9 +112,17 @@
             });
         });
 
-        $(document).ready(function(){
-            $('#spinner').hide();
+        $(document).ready(function() {
+            hide_spinner();
         });
+
+        function hide_spinner() {
+            $('#spinner').hide();
+        }
+
+        function show_spinner() {
+            $('#spinner').show();
+        }
 
         $(document).ready(function() {
             $('.tahun').select2({
@@ -153,12 +161,12 @@
                 contentType: false,
                 beforeSend: function() {
                     $('#simpan').hide();
-                    $('#spinner').show();
+                    show_spinner();
                 },
                 success: function(data) {
                     if (data.status == 'success') {
                         $('#simpan').show();
-                        $('#spinner').hide();
+                        hide_spinner();
                         Swal.fire({
                             icon: data.status,
                             text: data.message,
@@ -169,12 +177,11 @@
                         setTimeout(function() {
                             window.top.location = "{{ route('pengadaan') }}"
                         }, 1500);
-                    } else {
-                        $.each(data.error, function(prefix, val) {
-                            $('span.' + prefix + '_error').text(val[0]);
-                        });
                     }
-
+                },
+                error: function(data) {
+                    $('#simpan').show();
+                    hide_spinner();
                 }
             });
         });

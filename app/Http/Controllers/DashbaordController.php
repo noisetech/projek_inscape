@@ -7,6 +7,7 @@ use App\Pengadaan;
 use App\Unit;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DashbaordController extends Controller
 {
@@ -31,6 +32,11 @@ class DashbaordController extends Controller
 
     public function landing()
     {
-        return view('pages.dashbpard_home');
+        $barang = DB::table('barang')->paginate(6);
+
+        // dd($barang);
+        return view('pages.dashbpard_home', [
+            'barang' => $barang
+        ]);
     }
 }

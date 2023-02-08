@@ -7,6 +7,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class UnitController extends Controller
 {
@@ -22,6 +23,9 @@ class UnitController extends Controller
             $data = Unit::all();
 
             return datatables()->of($data)
+                ->editColumn('unit', function ($data) {
+                    return Str::upper($data->unit);
+                })
                 ->addColumn('aksi', function ($data) {
                     $button = '<div class="btn-group mb-2">
             <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>';
@@ -35,7 +39,7 @@ class UnitController extends Controller
 
                     return $button;
                 })
-                ->rawColumns(['aksi'])
+                ->rawColumns(['aksi', 'unit'])
                 ->make('true');
         }
     }

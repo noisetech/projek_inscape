@@ -19,6 +19,7 @@ Route::get('/', function () {
 });
 
 Route::prefix('dashboard')
+    ->middleware('auth')
     ->group(function () {
         Route::get('/', 'DashbaordController@index')
             ->name('dashboard');

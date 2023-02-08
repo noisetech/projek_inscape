@@ -19,6 +19,14 @@
 
 <body class="loading" data-layout-config='{"darkMode":false}'>
 
+    <style>
+        .card-img-top {
+            width: 100%;
+            height: 15vw;
+            object-fit: cover;
+        }
+    </style>
+
     <!-- NAVBAR START -->
     <div class="navbar-custom topnav-navbar">
         <div class="container-fluid">
@@ -227,55 +235,25 @@
             </div>
 
             <div class="row mt-4">
-                <div class="col-lg-4">
-                    <div class="demo-box text-center">
-                        <img src="{{ asset('backend/assets/images/layouts/layout-1.png') }}" alt="demo-img"
-                            class="img-fluid shadow-sm rounded">
-                        <h5 class="mt-3 f-17">Vertical Layout</h5>
+                @foreach ($barang as $item)
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card d-block h-100">
+                            <img class="card-img-top"
+                                src="{{ Storage::disk('s3')->temporaryUrl($item->gambar, now()->addMinutes(5)) }}"
+                                alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ Str::ucfirst($item->nama_barang) }}</h5>
+                                <p class="card-text">{{ Str::ucfirst($item->deskripsi) }}</p>
+                            </div>
+                            <div class="card-body">
+                                <a href="{{ route('barang.detail', $item->id) }}" class="card-link btn btn-sm btn-primary">Detail <i class="uil-eye"></i></a>
+                            </div> <!-- end card-body-->
+                        </div> <!-- end card-->
                     </div>
-                </div>
-
-                <div class="col-lg-4">
-                    <div class="demo-box text-center mt-3 mt-lg-0">
-                        <img src="{{ asset('backend/assets/images/layouts/layout-2.png') }}" alt="demo-img"
-                            class="img-fluid shadow-sm rounded">
-                        <h5 class="mt-3 f-17">Horizontal Layout</h5>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="demo-box text-center mt-3 mt-lg-0">
-                        <img src="{{ asset('backend/assets/images/layouts/layout-3.png') }}" alt="demo-img"
-                            class="img-fluid shadow-sm rounded">
-                        <h5 class="mt-3 f-17">Detached Layout</h5>
-                    </div>
-                </div>
+                @endforeach
             </div>
 
-            <div class="row mt-4">
 
-                <div class="col-lg-4">
-                    <div class="demo-box text-center">
-                        <img src="{{ asset('backend/assets/images/layouts/layout-5.png') }}" alt="demo-img"
-                            class="img-fluid shadow-sm rounded">
-                        <h5 class="mt-3 f-17">Light Sidenav Layout</h5>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="demo-box text-center mt-3 mt-lg-0">
-                        <img src="{{ asset('backend/assets/images/layouts/layout-6.png') }}" alt="demo-img"
-                            class="img-fluid shadow-sm rounded">
-                        <h5 class="mt-3 f-17">Boxed Layout</h5>
-                    </div>
-                </div>
-
-                <div class="col-lg-4">
-                    <div class="demo-box text-center mt-3 mt-lg-0">
-                        <img src="{{ asset('backend/assets/images/layouts/layout-4.png') }}" alt="demo-img"
-                            class="img-fluid shadow-sm rounded">
-                        <h5 class="mt-3 f-17">Semi Dark Layout</h5>
-                    </div>
-                </div>
-            </div>
 
         </div>
     </section>

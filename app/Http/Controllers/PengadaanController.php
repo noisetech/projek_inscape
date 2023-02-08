@@ -8,11 +8,10 @@ use App\ParameterBarang;
 use App\Pengadaan;
 use App\PengadaanDetail;
 use App\SpesifikasiParameter;
-use App\SpesifikasiSubBarang;
-use App\StepPengadaan;
 use App\SubBarang;
 use App\Tahun;
 use App\Unit;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -29,32 +28,73 @@ class PengadaanController extends Controller
     {
         if (request()->ajax()) {
 
-            $data = Pengadaan::all();
+            // kalo yang login adalah admin
+            if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('Admin') || Auth::user()->hasRole('ADMIN')) {
+                $data = Pengadaan::all();
 
-            return datatables()->of($data)
-                ->addColumn('unit', function ($data) {
-                    return $data->unit->unit;
-                })
-                ->addColumn('tahun', function ($data) {
-                    return $data->tahun->tahun;
-                })
-                ->addColumn('aksi', function ($data) {
-                    $button = '<div class="btn-group mb-2">
-                <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>';
+                return datatables()->of($data)
+                    ->addColumn('unit', function ($data) {
+                        return $data->unit->unit;
+                    })
+                    ->addColumn('tahun', function ($data) {
+                        return $data->tahun->tahun;
+                    })
+                    ->addColumn('aksi', function ($data) {
+                        $button = '<div class="btn-group mb-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>';
 
-                    $button .= ' <div class="dropdown-menu">
-                <a class="dropdown-item" href="' . route('pengdaan.detail', $data->id) . '"><i class="uil-pen"></i><span> Detail </span></a>';
+                        $button .= ' <div class="dropdown-menu">
+                    <a class="dropdown-item" href="' . route('pengdaan.detail', $data->id) . '"><i class="uil-pen"></i><span> Detail </span></a>';
 
-                    $button .= '<a class="dropdown-item hapus" id="' . $data->id . '" href="#"><i class="uil-trash-alt"></i><span> Hapus </span></a>
-                </div>
-            </div>';
+                        $button .= '<a class="dropdown-item hapus" id="' . $data->id . '" href="#"><i class="uil-trash-alt"></i><span> Hapus </span></a>
+                    </div>
+                </div>';
 
-                    return $button;
-                })
+                        return $button;
+                    })
 
 
-                ->rawColumns(['aksi', 'unit', 'tahun'])
-                ->make('true');
+                    ->rawColumns(['aksi', 'unit', 'tahun'])
+                    ->make('true');
+            }
+
+            // kalo yang login adalah users, pengawas, bidang pku, manager
+            if (Auth::user()->getRoleNames() != 'admin') {
+
+                $unit_users = Unit::whereHas('users', function ($q) {
+                    return $q->where('unit_users.users_id', Auth::user()->id);
+                })->first();
+
+                $data = Pengadaan::where('unit_id', $unit_users->id)->get();
+
+
+
+
+                return datatables()->of($data)
+                    ->addColumn('unit', function ($data) {
+                        return $data->unit->unit;
+                    })
+                    ->addColumn('tahun', function ($data) {
+                        return $data->tahun->tahun;
+                    })
+                    ->addColumn('aksi', function ($data) {
+                        $button = '<div class="btn-group mb-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>';
+
+                        $button .= ' <div class="dropdown-menu">
+                    <a class="dropdown-item" href="' . route('pengdaan.detail', $data->id) . '"><i class="uil-pen"></i><span> Detail </span></a>';
+
+                        $button .= '<a class="dropdown-item hapus" id="' . $data->id . '" href="#"><i class="uil-trash-alt"></i><span> Hapus </span></a>
+                    </div>
+                </div>';
+
+                        return $button;
+                    })
+
+
+                    ->rawColumns(['aksi', 'unit', 'tahun'])
+                    ->make('true');
+            }
         }
     }
 

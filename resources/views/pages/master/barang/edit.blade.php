@@ -64,7 +64,7 @@
             e.preventDefault();
             const fd = new FormData(this);
             $.ajax({
-                url: '{{ route('barang.store') }}',
+                url: '{{ route('barang.update') }}',
                 method: 'post',
                 data: fd,
                 cache: false,
