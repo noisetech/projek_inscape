@@ -72,9 +72,10 @@
     </div> <!-- .container-fluid -->
 
 
+    {{-- modal tambah barang --}}
     <div id="modal_tambah_barang" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="fullWidthModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-full-width">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="fullWidthModalLabel">Tambah Barang</h4>
@@ -108,9 +109,98 @@
                         </div>
                     </form>
                 </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+            </div>
+        </div>
+    </div>
+    {{-- akhir modal tambah barang --}}
+
+
+    {{-- modal edit barang --}}
+    <div id="modal_edit_barang" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="fullWidthModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="fullWidthModalLabel">Edit Barang</h4>
+                    <button type="button" class="btn-close" id="close_atas_edit_barang"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="#" method="POST" id="update_barang" enctype="multipart/form-data">
+                        @csrf
+
+                        <input type="hidden" name="id" id="id_barang">
+
+                        <div class="mb-3">
+                            <label for="" class="form-label">Nama Barang:</label> <sup
+                                class="text-danger">*</sup>
+                            <input type="text" name="nama_barang" class="form-control" id="nama_barang">
+                            <span class="text-danger error-text nama_barang_error"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="" class="form-label">Gambar Barang:</label> <sup class="text-danger">*
+                                <span class="mx text-dark">Isi jika ingin diubah</span></sup>
+                            <input type="file" name="gambar" class="form-control">
+                            <span class="text-danger error-text gambar_error"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="" class="form-label">Deskripsi Barang:</label> <sup
+                                class="text-danger">*</sup>
+                            <textarea name="deskripsi" cols="30" rows="10" class="form-control" id="deskripsi_barang"></textarea>
+                            <span class="text-danger error-text deskripsi_error"></span>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" id="close_bawah_edit_barang">Batal</button>
+                            <button type="submit" class="btn btn-primary" id="btn_edit_barang">Ubah</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- akhir modal edit barang --}}
+
+
+    {{-- awal modal  sub barang --}}
+    <div id="modal_sub_barang" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="fullWidthModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-full-width">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="fullWidthModalLabel">Sub barang</h4>
+                    <button type="button" class="btn-close" id="close_atas_sub_barang"></button>
+                </div>
+
+                <div class="row mt-2 mx-2">
+                    <div class="col-sm-4">
+                        <button class="btn btn-sm btn-primary" id="tambah_sub_barang">
+                            <i class="uil-plus-circle"></i> Tambah Sub Barang
+                        </button>
+                    </div>
+                </div>
+
+
+                <div class="modal-body">
+                    <div class="table table-responsive">
+                        <table class="table datatables dt-responsive nowrap" style="width: 100%"; id="dataTableSubBarang"
+                            role="grid" aria-describedby="dataTable-1_info">
+                            <thead>
+                                <tr>
+                                    <th>Barang</th>
+                                    <th>Sub Barang</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- akhir modal sub_barang --}}
 @endsection
 
 @push('script')
@@ -120,12 +210,7 @@
             $('#dataTable').DataTable({
                 processing: true,
                 serverSide: true,
-                pageLength: 5,
-                lengthMenu: [
-                    [5, 10, 20, -1],
-                    [5, 10, 20, "50"]
-                ],
-                // responsive: true,
+                responsive: true,
                 order: [],
                 ajax: {
                     url: "{{ route('barang.data') }}"
@@ -151,10 +236,11 @@
             });
         });
 
+        // awal bagian tambah barang
+
         $('#close_atas_tambah_barang').on('click', function() {
             $('#modal_tambah_barang').modal('hide');
         });
-
 
         $('#close_bawah_tambah_barang').on('click', function() {
             $('#modal_tambah_barang').modal('hide');
@@ -210,6 +296,94 @@
             });
         });
 
+        // akhir tambah barang
+
+
+        //    bagian edit barang
+
+        $(document).on('click', '#close_atas_edit_barang', function(e) {
+            $('#modal_edit_barang').modal('hide');
+        });
+
+        $(document).on('click', '#close_bawah_edit_barang', function(e) {
+            $('#modal_edit_barang').modal('hide');
+        });
+
+        $('#modal_edit_barang').on('hidden.bs.modal', function(e) {
+            $("#modal_edit_barang").modal('hide');
+            $('#update_barang')[0].reset();
+            $("#btn_edit_barang").text('Simpan');
+            $(document).find('span.error-text').empty();
+
+        });
+
+        $(document).on('click', '.edit', function(e) {
+            e.preventDefault();
+
+            let id = $(this).attr('id');
+
+            $('#modal_edit_barang').modal('show');
+
+            $.ajax({
+                url: '{{ route('barangById') }}',
+                method: 'get',
+                data: {
+                    id: id,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(data) {
+                    $('#id_barang').val(data.id);
+                    $('#nama_barang').val(data.nama_barang);
+                    $('#deskripsi_barang').val(data.deskripsi);
+
+
+                }
+            });
+        })
+
+        $("#update_barang").submit(function(e) {
+            e.preventDefault();
+            const fd = new FormData(this);
+            $.ajax({
+                url: '{{ route('barang.update') }}',
+                method: 'post',
+                data: fd,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+                contentType: false,
+                beforeSend: function() {
+                    $(document).find('span.error-text').text('');
+                },
+                success: function(data) {
+                    if (data.status == 'success') {
+                        Swal.fire({
+                            icon: data.status,
+                            text: data.message,
+                            title: data.title,
+                            timer: 1500,
+                            showConfirmButton: false,
+                        });
+
+                        $("#modal_edit_barang").modal('hide');
+                        $('#update_barang')[0].reset();
+                        $("#btn_edit_barang").text('Simpan');
+                        $(document).find('span.error-text').empty();
+
+                    } else {
+                        $.each(data.error, function(prefix, val) {
+                            $('span.' + prefix + '_error').text(val[0]);
+                        });
+                    }
+
+                }
+            });
+        });
+
+        // akhir edit barang
+
+
+        //    bagian hapus barang
         $(document).on('click', '.hapus', function(e) {
             e.preventDefault();
             let id = $(this).attr('id');
@@ -250,6 +424,59 @@
                     })
                 }
             })
+        });
+
+        // akhir hapus barang
+
+
+        // awal modal sub barang
+
+        $(document).on('click', '.sub_barang', function(e) {
+            e.preventDefault();
+
+            let bahan_barang_id = $(this).attr('id');
+            $('#modal_sub_barang').modal('show');
+
+            $('#dataTableSubBarang').DataTable({
+                destroy: true,
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                order: [],
+                ajax: {
+                    url: "{{ route('sub_barang.data') }}",
+                    data: {
+                        barang_id: bahan_barang_id
+                    },
+                },
+                columns: [{
+                        data: 'barang',
+                        name: 'barang',
+                    },
+                    {
+                        data: 'sub_barang',
+                        name: 'sub_barang',
+                    },
+                    {
+                        data: 'aksi',
+                        name: 'aksi',
+                    },
+                ]
+            });
+        });
+
+        $('#modal_sub_barang').on('hidden.bs.modal', function(e) {
+            $("#modal_sub_barang").modal('hide');
+        });
+
+        $(document).on('click', '#close_atas_sub_barang', function(e) {
+            e.preventDefault();
+
+            $('#modal_sub_barang').modal('hide');
+        });
+
+        $(document).on('click', '#tambah_sub_barang', function(e) {
+            $("#modal_sub_barang").modal('hide');
         });
     </script>
 @endpush

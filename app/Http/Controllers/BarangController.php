@@ -16,6 +16,8 @@ use Illuminate\Support\Str;
 
 class BarangController extends Controller
 {
+
+    // bagian barang
     public function index()
     {
         return view('pages.master.barang.index');
@@ -36,9 +38,9 @@ class BarangController extends Controller
                 <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>';
 
                     $button .= ' <div class="dropdown-menu">
-                <a class="dropdown-item" href="' . route('barang.edit', $data->slug) . '"><i class="uil-pen"></i><span> Ubah </span></a>';
-
-                    $button .= '<a class="dropdown-item" href="' . route('barang.detail', $data->id) . '"><i class="uil-eye"></i><span> Detail </span></a>';
+                <a class="dropdown-item edit" href="#" id="' . $data->id . '"><i class="uil-pen"></i><span> Ubah </span></a>';
+                    $button .= '<a class="dropdown-item sub_barang" id="' . $data->id . '" href="#"><i class="uil-book"></i><span> Sub barang </span></a>
+               ';
                     $button .= '<a class="dropdown-item hapus" id="' . $data->id . '" href="#"><i class="uil-trash-alt"></i><span> Hapus </span></a>
                     </div>
                 </div>';
@@ -117,24 +119,60 @@ class BarangController extends Controller
         ]);
     }
 
-    public function edit($slug)
+    public function barangById(Request $request)
     {
-        $barang = Barang::where('slug', $slug)->first();
+        $barang = Barang::find($request->id);
 
-        return view('pages.master.barang.edit', [
-            'barang' => $barang
-        ]);
+        return response()->json($barang);
     }
+
+
 
     public function update(Request $request)
     {
-        $file = $request->file('gambar');
+        $validator = Validator::make($request->all(), [
+            'nama_barang' => 'required',
+            'gambar' => 'file|mimes:png,jpg,jpeg|max:2048',
+            'deskripsi' => 'required'
+        ], [
+            'nama_barang.required' => 'tidak boleh kosong',
+            'deskripsi.required' => 'tidak boleh kosong',
+            'gambar.file' => 'harus berupa file',
+            'gambar.mimes' => 'harus file gambar berupa png, jpg, jpeg',
+            'gambar.max' => 'maksimal 2MB'
+        ]);
 
-        $path = Storage::disk('s3')->put('gambar_barang', $file, $file->hashName());
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'error' => $validator->errors()->toArray()
+            ]);
+        }
+
+        if (!empty($request->gambar)) {
+
+            $file = $request->file('gambar');
+
+            $path = Storage::disk('s3')->put('gambar_barang', $file, $file->hashName());
+
+            $barang = Barang::find($request->id);
+            $barang->nama_barang = $request->nama_barang;
+            $barang->gambar = $path;
+            $barang->slug = Str::slug($request->nama_barang);
+            $barang->deskripsi = $request->deskripsi;
+            $finish =  $barang->save();
+
+            if ($finish) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Data diubah',
+                    'title' => 'Berhasil'
+                ]);
+            }
+        }
 
         $barang = Barang::find($request->id);
         $barang->nama_barang = $request->nama_barang;
-        $barang->gambar = $path;
         $barang->slug = Str::slug($request->nama_barang);
         $barang->deskripsi = $request->deskripsi;
         $finish =  $barang->save();
@@ -160,6 +198,45 @@ class BarangController extends Controller
                 'message' => 'Data dihapus',
                 'title' => 'Berhasil'
             ]);
+        }
+    }
+
+    // akhir barang
+
+
+    // awal sub barang
+
+    public function data_sub_barang(Request $request)
+    {
+        if (request()->ajax()) {
+
+            $data = DB::table('sub_barang')->where('barang_id', $request->barang_id)
+                ->select('sub_barang.*', 'barang.*')
+                ->join('barang', 'barang.id', '=', 'sub_barang.barang_id')
+                ->get();
+
+            // dd($data);
+
+            return datatables()->of($data)
+                ->addColumn('barang', function ($data) {
+                    return $data->nama_barang;
+                })
+                ->addColumn('aksi', function ($data) {
+                    $button = '<div class="btn-group mb-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>';
+
+                    $button .= ' <div class="dropdown-menu">
+                <a class="dropdown-item edit_sub_barang" href="#" id="' . $data->id . '"><i class="uil-pen"></i><span> Ubah </span></a>';
+
+                    $button .= '<a class="dropdown-item hapus_sub_barang" id="' . $data->id . '" href="#"><i class="uil-trash-alt"></i><span> Hapus </span></a>
+                    </div>
+                </div>';
+
+
+                    return $button;
+                })
+                ->rawColumns(['aksi', 'barang'])
+                ->make('true');
         }
     }
 

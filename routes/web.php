@@ -122,6 +122,7 @@ Route::prefix('dashboard')
         Route::post('unit.update', 'UnitController@update')
             ->name('unit.update');
 
+        // awal bagian route barang
         Route::get('barang', 'BarangController@index')
             ->name('barang');
         Route::get('barang.data', 'BarangController@data')
@@ -130,15 +131,17 @@ Route::prefix('dashboard')
             ->name('barang.create');
         Route::post('barang.store', 'BarangController@store')
             ->name('barang.store');
-        Route::get('barang/edit/{slug}', 'BarangController@edit')
-            ->name('barang.edit');
-        Route::get('barang/detail/{id}', 'BarangController@detail')
-            ->name('barang.detail');
+        Route::get('barangById', 'BarangController@barangById')
+            ->name('barangById');
         Route::post('barang.update', 'BarangController@update')
             ->name('barang.update');
         Route::post('hapus.barang', 'BarangController@hapus_barang')
             ->name('hapus.barang');
+        // akhir bagian route barang
 
+        // awal bagian route sub barang
+        Route::get('sub_barang.data', 'BarangController@data_sub_barang')
+            ->name('sub_barang.data');
         Route::get('barang/tambahsubbarang/{slug}', 'BarangController@create_sub_barang')
             ->name('barang.create_sub_barang');
         Route::post('sub_barang.store', 'BarangController@store_sub_barang')
@@ -149,6 +152,9 @@ Route::prefix('dashboard')
             ->name('update.sub_barang');
         Route::post('sub_barang.destroy', 'BarangController@hapus_sub_barang')
             ->name('sub_barang.hapus');
+        // akhir bagian route sub_barang
+
+
         Route::get('barang/tambahparameter/{slug}', 'BarangController@create_parameter_barang')
             ->name('barang.createparameter');
         Route::post('parameter_barang.store', 'BarangController@store_parameter_barang')
