@@ -246,7 +246,9 @@
                                 <p class="card-text">{{ Str::ucfirst($item->deskripsi) }}</p>
                             </div>
                             <div class="card-body">
-                                <a href="{{ route('barang.detail', $item->id) }}" class="card-link btn btn-sm btn-primary">Detail <i class="uil-eye"></i></a>
+                                <a href="{{ route('barang') }}"
+                                    class="card-link btn btn-sm btn-primary">Halaman Barang <i
+                                        class="uil-list-ui-alt"></i></a>
                             </div> <!-- end card-body-->
                         </div> <!-- end card-->
                     </div>

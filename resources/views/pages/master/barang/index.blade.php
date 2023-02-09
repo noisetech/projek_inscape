@@ -287,6 +287,97 @@
         </div>
     </div>
     {{-- akhir modal edit sub barang --}}
+
+
+    {{-- modal parameter barang --}}
+    <div id="modal_parameter_barang" class="modal fade" tabindex="-1" role="dialog"
+        aria-labelledby="fullWidthModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-full-width">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="fullWidthModalLabel">Parameter barang</h4>
+                    <button type="button" class="btn-close" id="close_atas_parameter_barang"></button>
+                </div>
+
+                <div class="row mt-2 mx-2">
+                    <div class="col-sm-4">
+                        <button class="btn btn-sm btn-primary" id="bahan_id_barang_untuk_tambah_parameter_barang"
+                            data-id="">
+                            <i class="uil-plus-circle"></i> Tambah Parameter Barang
+                        </button>
+                    </div>
+                </div>
+
+
+                <div class="modal-body">
+                    <div class="table table-responsive">
+                        <table class="table datatables dt-responsive nowrap" style="width: 100%"; id="dataTableParameter"
+                            role="grid" aria-describedby="dataTable-1_info">
+                            <thead>
+                                <tr>
+                                    <th>Barang</th>
+                                    <th>Parameter</th>
+                                    <th>Bobot</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- akhir modal parameter barang --}}
+
+    {{-- modal tambah parameter --}}
+    <div id="modal_tambah_parameter_barang" class="modal fade" tabindex="-1" role="dialog"
+        aria-labelledby="fullWidthModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="fullWidthModalLabel">Tambah Parameter Barang</h4>
+                    <button type="button" class="btn-close" id="close_atas_tambah_parameter_barang"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="#" method="POST" id="tambah_parameter_barang" enctype="multipart/form-data">
+                        @csrf
+
+                        <input type="hidden" name="barang_id" id="id_barang_pada_tambah_parameter_barang"
+                            class="form-control" readonly>
+
+                        <div class="mb-3">
+                            <label for="" class="form-label">Nama Barang:</label> <sup
+                                class="text-danger">*</sup>
+                            <input type="text" id="nama_barang_pada_tambah_parameter_barang" class="form-control"
+                                readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="" class="form-label">Parameter Barang:</label> <sup
+                                class="text-danger">*</sup>
+                            <input type="text" name="parameter" class="form-control">
+                            <span class="text-danger error-text parameter_error"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="" class="form-label">Bobot Parameter:</label> <sup
+                                class="text-danger">*</sup>
+                            <input type="text" name="bobot" class="form-control">
+                            <span class="text-danger error-text bobot_error"></span>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light"
+                                id="close_bawah_tambah_parameter_barang">Batal</button>
+                            <button type="submit" class="btn btn-primary" id="btn_tambah_paramer_barang">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- akhir modal parameter --}}
 @endsection
 
 @push('script')
@@ -669,6 +760,26 @@
 
 
         // bagian edit sub barang
+        $(document).on('click', '#close_atas_edit_sub_barang', function() {
+            $("#modal_edit_sub_barang").modal('hide');
+            $('#dataTableSubBarang').DataTable().ajax().reload();
+            $("#btn_edit_sub_barang").text('Simpan');
+            $(document).find('span.error-text').empty();
+        });
+
+        $(document).on('click', '#close_bawah_edit_sub_barang', function() {
+            $("#modal_edit_sub_barang").modal('hide');
+            $('#dataTableSubBarang').DataTable().ajax().reload();
+            $("#btn_edit_sub_barang").text('Simpan');
+            $(document).find('span.error-text').empty();
+        });
+
+        $('#modal_edit_sub_barang').on('hidden.bs.modal', function(e) {
+            $("#modal_edit_sub_barang").modal('hide');
+            $('#dataTableSubBarang').DataTable().ajax.reload();
+            $("#btn_edit_sub_barang").text('Simpan');
+            $(document).find('span.error-text').empty();
+        });
 
         $(document).on('click', '.edit_sub_barang', function(e) {
             e.preventDefault();
@@ -678,8 +789,6 @@
             $('#modal_edit_sub_barang').modal('show');
 
             let id_sub_barang = $(this).attr('id');
-
-            console.log(id_sub_barang);
 
             $.ajax({
                 url: '{{ route('subBarangById') }}',
@@ -774,6 +883,193 @@
                                     showConfirmButton: false,
                                 });
                                 $('#dataTableSubBarang').DataTable().ajax.reload();
+                            }
+                        },
+                    })
+                }
+            })
+        });
+
+        // bagian parameter barang
+
+
+
+        $(document).on('click', '.parameter_barang', function(e) {
+            e.preventDefault();
+
+
+            $('#modal_parameter_barang').modal('show');
+            let barang_id = $(this).attr('id');
+
+            $('#dataTableParameter').DataTable({
+                destroy: true,
+                serverSide: true,
+                processing: true,
+                order: [],
+                ajax: {
+                    url: "{{ route('parameter.data') }}",
+                    data: {
+                        barang_id: barang_id
+                    },
+                },
+                columns: [{
+                        data: 'nama_barang',
+                        name: 'nama_barang',
+                    },
+                    {
+                        data: 'parameter',
+                        name: 'parameter',
+                    },
+                    {
+                        data: 'bobot',
+                        name: 'bobot'
+                    },
+                    {
+                        data: 'aksi',
+                        name: 'aksi',
+                    },
+                ]
+            });
+
+
+            $('#bahan_id_barang_untuk_tambah_parameter_barang').attr('data-id', barang_id);
+
+
+        });
+
+        $(document).on('click', '#bahan_id_barang_untuk_tambah_parameter_barang', function(e) {
+            e.preventDefault();
+
+            let barang_id = $(this).attr('data-id');
+
+            $('#modal_parameter_barang').modal('hide');
+            $('#modal_tambah_parameter_barang').modal('show');
+
+            $.ajax({
+                url: '{{ route('barangById') }}',
+                method: 'get',
+                data: {
+                    id: barang_id,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#id_barang_pada_tambah_parameter_barang').val(data.id);
+                    $('#nama_barang_pada_tambah_parameter_barang').val(data.nama_barang.toUpperCase());
+                }
+            });
+
+        });
+
+        $("#tambah_parameter_barang").submit(function(e) {
+            e.preventDefault();
+            const fd = new FormData(this);
+            $.ajax({
+                url: '{{ route('parameter_barang.store') }}',
+                method: 'post',
+                data: fd,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+                contentType: false,
+                beforeSend: function() {
+                    $(document).find('span.error-text').text('');
+                },
+                success: function(data) {
+                    if (data.status == 'success') {
+                        Swal.fire({
+                            icon: data.status,
+                            text: data.message,
+                            title: data.title,
+                            timer: 1500,
+                            showConfirmButton: false,
+                        });
+                        $("#modal_tambah_parameter_barang").modal('hide');
+                        $('#dataTableParameter').DataTable().ajax.reload();
+                        $('#tambah_parameter_barang')[0].reset();
+                        $("#btn_tambah_parameter_barang").text('Simpan');
+                        $(document).find('span.error-text').empty();
+                    } else {
+                        $.each(data.error, function(prefix, val) {
+                            $('span.' + prefix + '_error').text(val[0]);
+                        });
+                    }
+
+                }
+            });
+        });
+
+        $(document).on('click', '#close_atas_parameter_barang', function(e) {
+            $("#modal_parameter_barang").modal('hide');
+            $('#dataTableParameter').DataTable().ajax.reload();
+        });
+
+
+        $('#modal_parameter_barang').on('hidden.bs.modal', function(e) {
+            $("#modal_parameter_barang").modal('hide');
+            $('#dataTableParameter').DataTable().ajax.reload();
+        });
+
+        // bagian close modal tambah parameter barang
+
+        $(document).on('click', '#close_atas_tambah_parameter_barang', function(e) {
+            $("#modal_parameter_barang").modal('hide');
+            $('#dataTableParameter').DataTable().ajax.reload();
+            $("#btn_tambah_parameter_barang").text('Simpan');
+            $(document).find('span.error-text').empty();
+        });
+
+        $(document).on('click', '#close_bawah_tambah_parameter_barang', function(e) {
+            $("#modal_tambah_parameter_barang").modal('hide');
+            $('#dataTableParameter').DataTable().ajax.reload();
+            $("#btn_tambah_parameter_barang").text('Simpan');
+            $(document).find('span.error-text').empty();
+        });
+
+
+        $('#modal_tambah_parameter_barang').on('hidden.bs.modal', function(e) {
+            $("#modal_parameter_barang").modal('hide');
+            $('#dataTableParameter').DataTable().ajax.reload();
+            $("#btn_tambah_parameter_barang").text('Simpan');
+            $(document).find('span.error-text').empty();
+        });
+
+        $(document).on('click', '.hapus_parameter', function(e) {
+            e.preventDefault();
+
+            let id = $(this).attr('id');
+            console.log(id);
+            Swal.fire({
+                title: 'Anda ingin menghapus data?',
+                text: "Data telah dihapus tidak bisa di kembalikan!",
+                icon: 'warning',
+                confirmButton: true,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('hapus_parameter') }}",
+                        data: {
+                            id: id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(data) {
+                            if (data.status == 'success') {
+                                Swal.fire({
+                                    icon: data.status,
+                                    text: data.message,
+                                    title: data.title,
+                                    toast: true,
+                                    position: 'top-end',
+                                    timer: 3000,
+                                    showConfirmButton: false,
+                                });
+                                $('#dataTableParameter').DataTable().ajax.reload();
                             }
                         },
                     })

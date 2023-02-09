@@ -154,7 +154,8 @@ Route::prefix('dashboard')
             ->name('sub_barang.hapus');
         // akhir bagian route sub_barang
 
-
+        Route::get('parameter.data', 'BarangController@data_parameter')
+        ->name('parameter.data');
         Route::get('barang/tambahparameter/{slug}', 'BarangController@create_parameter_barang')
             ->name('barang.createparameter');
         Route::post('parameter_barang.store', 'BarangController@store_parameter_barang')

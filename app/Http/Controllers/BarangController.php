@@ -44,6 +44,8 @@ class BarangController extends Controller
                 <a class="dropdown-item edit" href="#" id="' . $data->id . '"><i class="uil-pen"></i><span> Ubah </span></a>';
                     $button .= '<a class="dropdown-item sub_barang" id="' . $data->id . '" href="#"><i class="uil-book"></i><span> Sub barang </span></a>
                ';
+                    $button .= '<a class="dropdown-item parameter_barang" id="' . $data->id . '" href="#"><i class="uil-book"></i><span> Parameter barang </span></a>
+               ';
                     $button .= '<a class="dropdown-item hapus" id="' . $data->id . '" href="#"><i class="uil-trash-alt"></i><span> Hapus </span></a>
                     </div>
                 </div>';
@@ -338,9 +340,55 @@ class BarangController extends Controller
         ]);
     }
 
+    public function data_parameter(Request $request)
+    {
+        $data = DB::table('parameter_barang')
+            ->select('parameter_barang.*', 'barang.id as id_barang', 'barang.nama_barang as nama_barang')
+            ->join('barang', 'barang.id', '=', 'parameter_barang.barang_id')
+            ->where('parameter_barang.barang_id', $request->barang_id)
+            ->get();
+
+        return datatables()->of($data)
+            ->addColumn('nama_barang', function ($data) {
+                return Str::ucfirst($data->nama_barang);
+            })
+            ->addColumn('aksi', function ($data) {
+                $button = '<div class="btn-group mb-2">
+        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>';
+
+                $button .= ' <div class="dropdown-menu">
+        <a class="dropdown-item edit_parameter" href="#" id="' . $data->id . '"><i class="uil-pen"></i><span> Ubah </span></a>';
+
+                $button .= '<a class="dropdown-item hapus_parameter" id="' . $data->id . '" href="#"><i class="uil-trash-alt"></i><span> Hapus </span></a>
+            </div>
+        </div>';
+
+
+                return $button;
+            })
+            ->rawColumns(['aksi', 'nama_barang'])
+            ->make('true');
+    }
+
     public function store_parameter_barang(Request $request)
     {
 
+        $validator = Validator::make($request->all(), [
+            'barang_id' => 'required',
+            'parameter' => 'required',
+            'bobot' => 'required',
+        ], [
+            'barang_id.required' => 'tidak boleh kosong',
+            'parameter.required' => 'tidak boleh kosong',
+            'bobot.required' => 'tidak boleh kosong'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'error' => $validator->errors()->toArray()
+            ]);
+        }
         $parameter = new ParameterBarang();
         $parameter->barang_id = $request->barang_id;
         $parameter->parameter = $request->parameter;
