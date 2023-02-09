@@ -408,9 +408,13 @@ class BarangController extends Controller
     public function parameterById(Request $request)
     {
         $parameter = DB::table('parameter_barang')
-            ->select('barang.id as id_barang',
-             'barang.nama_barang as nama_barang',
-             'parameter_barang.id as id_parameter_barang', 'parameter_barang.parameter as parameter')
+            ->select(
+                'barang.id as id_barang',
+                'barang.nama_barang as nama_barang',
+                'parameter_barang.id as id_parameter_barang',
+                'parameter_barang.parameter as parameter',
+                'parameter_barang.bobot as bobot'
+            )
             ->join('barang', 'barang.id', '=', 'parameter_barang.barang_id')
             ->where('parameter_barang.id', $request->id)->first();
         return response()->json($parameter);
@@ -418,6 +422,21 @@ class BarangController extends Controller
 
     public function updateParameterBarang(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'parameter' => 'required',
+            'bobot' => 'required'
+        ], [
+            'parameter.required' => 'tidak boleh kosong',
+            'bobot.required' => 'tidak boleh kosong'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'error' => $validator->errors()->toArray()
+            ]);
+        }
+
         $parameter = ParameterBarang::find($request->id);
         $parameter->barang_id = $request->barang_id;
         $parameter->parameter = $request->parameter;

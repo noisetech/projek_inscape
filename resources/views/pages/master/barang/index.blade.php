@@ -389,27 +389,34 @@
                     <button type="button" class="btn-close" id="close_atas_edit_parameter_barang"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="#" id="edit_parameter" method="POST">
+                    <form action="#" id="update_parameter" method="POST">
                         @csrf
 
-                        <input type="text" name="barang_id" id="barang_id_edit_parameter">
+                        <input type="hidden" name="barang_id" id="barang_id_edit_parameter">
 
-                        <input type="text" name="id" id="id_parameter_edit_parameter">
+                        <input type="hidden" name="id" id="id_parameter_edit_parameter">
 
                         <div class="mb-3">
                             <label for="">Nama Barang</label>
-                            <input type="text" id="nama_barang" class="form-control" readonly>
+                            <input type="text" id="nama_barang_edit_parameter" class="form-control" readonly>
                         </div>
 
                         <div class="mb-3">
                             <label for="" class="form-label">Parameter</label>
                             <input type="text" name="parameter" id="parameter_edit" class="form-control">
+                            <span class="text-danger error-text parameter_error"></span>
                         </div>
-
 
                         <div class="mb-3">
                             <label for="" class="form-label">Bobot</label>
                             <input type="text" name="bobot" id="bobot_edit" class="form-control">
+                            <span class="text-danger error-text bobot_error"></span>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light"
+                                id="close_bawah_edit_parameter_barang">Batal</button>
+                            <button type="submit" class="btn btn-primary" id="btn_edit_paramter_barang">Simpan</button>
                         </div>
                     </form>
                 </div>
@@ -1085,6 +1092,32 @@
             $(document).find('span.error-text').empty();
         });
 
+        // bagian close edit modal parameter barang
+        $(document).on('click', '#close_atas_edit_parameter_barang', function(e) {
+            $("#modal_parameter_barang").modal('hide');
+            $('#dataTableParameter').DataTable().ajax.reload();
+            $("#btn_edit_paramter_barang").text('Simpan');
+            $("#nama_barang_pada_tambah_parameter_barang").val("");
+            $(".parameter").val("");
+            $(".bobot").val("");
+            $(document).find('span.error-text').empty();
+        });
+
+        $(document).on('click', '#close_bawah_edit_parameter_barang', function(e) {
+            $("#modal_tambah_parameter_barang").modal('hide');
+            $('#dataTableParameter').DataTable().ajax.reload();
+            $("#btn_edit_paramter_barang").text('Simpan');
+            $(document).find('span.error-text').empty();
+        });
+
+
+        $('#modal_edit_parameter_barang').on('hidden.bs.modal', function(e) {
+            $("#modal_edit_parameter_barang").modal('hide');
+            $('#dataTableParameter').DataTable().ajax.reload();
+            $("#btn_edit_paramter_barang").text('Simpan');
+            $(document).find('span.error-text').empty();
+        });
+
         // bagian edit parameter
         $(document).on('click', '.edit_parameter', function(e) {
             e.preventDefault();
@@ -1102,11 +1135,55 @@
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(data) {
-                $('#barang_id_edit_parameter').val(data.id_barang)
+                    console.log(data);
+                    $('#barang_id_edit_parameter').val(data.id_barang)
+                    $('#id_parameter_edit_parameter').val(data.id_parameter_barang);
+                    $('#nama_barang_edit_parameter').val(data.nama_barang);
+                    $('#parameter_edit').val(data.parameter);
+                    $('#bobot_edit').val(data.bobot);
+                }
+            });
+        });
+
+        $("#update_parameter").submit(function(e) {
+            e.preventDefault();
+            const fd = new FormData(this);
+            $.ajax({
+                url: '{{ route('paramater.update') }}',
+                method: 'post',
+                data: fd,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+                contentType: false,
+                beforeSend: function() {
+                    $(document).find('span.error-text').text('');
+                },
+                success: function(data) {
+                    if (data.status == 'success') {
+                        Swal.fire({
+                            icon: data.status,
+                            text: data.message,
+                            title: data.title,
+                            timer: 1500,
+                            showConfirmButton: false,
+                        });
+                        $("#modal_edit_parameter_barang").modal('hide');
+                        $('#dataTableParameter').DataTable().ajax.reload();
+                        $("#btn_edit_parameter_barang").text('Simpan');
+                        $(document).find('span.error-text').empty();
+                    } else {
+                        $.each(data.error, function(prefix, val) {
+                            $('span.' + prefix + '_error').text(val[0]);
+                        });
+                    }
 
                 }
             });
         });
+
+
+        // bagian hapus parameter
 
         $(document).on('click', '.hapus_parameter', function(e) {
             e.preventDefault();
