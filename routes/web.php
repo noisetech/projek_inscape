@@ -146,8 +146,8 @@ Route::prefix('dashboard')
             ->name('barang.create_sub_barang');
         Route::post('sub_barang.store', 'BarangController@store_sub_barang')
             ->name('sub_barang.store');
-        Route::get('subbarang/edit/{slug}', 'BarangController@edit_sub_barang')
-            ->name('sub_barang.edit');
+        Route::get('subByBarangById', 'BarangController@subBarangById')
+            ->name('subBarangById');
         Route::post('subbarang.update', 'BarangController@update_sub_barang')
             ->name('update.sub_barang');
         Route::post('sub_barang.destroy', 'BarangController@hapus_sub_barang')

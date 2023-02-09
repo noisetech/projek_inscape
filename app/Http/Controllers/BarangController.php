@@ -30,6 +30,9 @@ class BarangController extends Controller
             $data = Barang::orderBy('nama_barang', 'ASC')->get();
 
             return datatables()->of($data)
+                ->editColumn('nama_barang', function ($data) {
+                    return Str::ucfirst($data->nama_barang);
+                })
                 ->editColumn('gambar', function ($data) {
                     return "<img src=" . Storage::disk('s3')->temporaryUrl($data->gambar, now()->addMinutes(5)) . " class='img-thumbnail' width='100'>";
                 })
@@ -48,7 +51,7 @@ class BarangController extends Controller
 
                     return $button;
                 })
-                ->rawColumns(['aksi', 'gambar'])
+                ->rawColumns(['aksi', 'gambar', 'nama_barang'])
                 ->make('true');
         }
     }
@@ -211,7 +214,7 @@ class BarangController extends Controller
         if (request()->ajax()) {
 
             $data = DB::table('sub_barang')->where('barang_id', $request->barang_id)
-                ->select('sub_barang.*', 'barang.*')
+                ->select('sub_barang.id as id_sub_barang', 'sub_barang.sub_barang as sub_barang', 'barang.*')
                 ->join('barang', 'barang.id', '=', 'sub_barang.barang_id')
                 ->get();
 
@@ -226,9 +229,9 @@ class BarangController extends Controller
                 <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>';
 
                     $button .= ' <div class="dropdown-menu">
-                <a class="dropdown-item edit_sub_barang" href="#" id="' . $data->id . '"><i class="uil-pen"></i><span> Ubah </span></a>';
+                <a class="dropdown-item edit_sub_barang" href="#" id="' . $data->id_sub_barang . '"><i class="uil-pen"></i><span> Ubah </span></a>';
 
-                    $button .= '<a class="dropdown-item hapus_sub_barang" id="' . $data->id . '" href="#"><i class="uil-trash-alt"></i><span> Hapus </span></a>
+                    $button .= '<a class="dropdown-item hapus_sub_barang" id="' . $data->id_sub_barang . '" href="#"><i class="uil-trash-alt"></i><span> Hapus </span></a>
                     </div>
                 </div>';
 
@@ -253,6 +256,21 @@ class BarangController extends Controller
 
     public function store_sub_barang(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'barang_id' => 'required',
+            'sub_barang' => 'required'
+        ], [
+            'barang_id.required' => 'tidak boleh kosong',
+            'sub_barang.required' => 'tidak boleh kosong',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'error' => $validator->errors()->toArray()
+            ]);
+        }
+
         $sub_barang = new SubBarang();
         $sub_barang->barang_id = $request->barang_id;
         $sub_barang->sub_barang = $request->sub_barang;
@@ -268,13 +286,16 @@ class BarangController extends Controller
         }
     }
 
-    public function edit_sub_barang($slug)
-    {
-        $sub_barang = SubBarang::where('slug', $slug)->first();
 
-        return view('pages.master.barang.edit_sub_barang', [
-            'sub_barang' => $sub_barang
-        ]);
+    public function subBarangById(Request $request)
+    {
+        $sub_barang = DB::table('sub_barang')
+            ->select('sub_barang.id as sub_barang_id', 'sub_barang.sub_barang as sub_barang', 'barang.id as barang_id', 'barang.nama_barang as nama_barang')
+            ->join('barang', 'barang.id', '=', 'sub_barang.barang_id')
+            ->where('sub_barang.id', $request->id)
+            ->first();
+
+        return response()->json($sub_barang);
     }
 
     public function update_sub_barang(Request $request)
@@ -298,9 +319,7 @@ class BarangController extends Controller
 
     public function hapus_sub_barang(Request $request)
     {
-        $sub_barang = SubBarang::find($request->id);
-
-        $finish = $sub_barang->delete();
+        $finish = DB::table('sub_barang')->where('id', $request->id)->delete();
 
         if ($finish) {
             return response()->json([
