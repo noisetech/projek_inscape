@@ -258,6 +258,9 @@
                     <form action="#" method="POST" id="edit_sub_barang" enctype="multipart/form-data">
                         @csrf
 
+
+                        <input type="hidden" name="id" id="id" class="form-control" readonly>
+
                         <input type="hidden" name="barang_id" id="id_barang_pada_edit_sub_barang" class="form-control"
                             readonly>
 
@@ -269,13 +272,13 @@
 
                         <div class="mb-3">
                             <label for="" class="form-label">Sub Barang:</label> <sup class="text-danger">*</sup>
-                            <input type="text" name="sub_barang" class="form-control" id="nama_sub_barang_pada_edit_sub_barang">
+                            <input type="text" name="sub_barang" class="form-control"
+                                id="nama_sub_barang_pada_edit_sub_barang">
                             <span class="text-danger error-text sub_barang_error"></span>
                         </div>
 
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-light"
-                                id="close_bawah_edit_sub_barang">Batal</button>
+                            <button type="button" class="btn btn-light" id="close_bawah_edit_sub_barang">Batal</button>
                             <button type="submit" class="btn btn-primary" id="btn_edit_sub_barang">Simpan</button>
                         </div>
                     </form>
@@ -612,7 +615,6 @@
             // barang_id
             let barang_id = $(this).attr('data-id');
 
-
             $.ajax({
                 url: '{{ route('barangById') }}',
                 method: 'get',
@@ -677,6 +679,8 @@
 
             let id_sub_barang = $(this).attr('id');
 
+            console.log(id_sub_barang);
+
             $.ajax({
                 url: '{{ route('subBarangById') }}',
                 method: 'get',
@@ -685,12 +689,51 @@
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(data) {
+                    $('#id').val(data.sub_barang_id);
                     $('#id_barang_pada_edit_sub_barang').val(data.barang_id);
                     $('#nama_barang_pada_edit_sub_barang').val(data.nama_barang.toUpperCase());
                     $('#nama_sub_barang_pada_edit_sub_barang').val(data.sub_barang.toUpperCase());
                 }
             });
         })
+
+        $("#edit_sub_barang").submit(function(e) {
+            e.preventDefault();
+            const fd = new FormData(this);
+            $.ajax({
+                url: '{{ route('update.sub_barang') }}',
+                method: 'post',
+                data: fd,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+                contentType: false,
+                beforeSend: function() {
+                    $(document).find('span.error-text').text('');
+                },
+                success: function(data) {
+                    if (data.status == 'success') {
+                        Swal.fire({
+                            icon: data.status,
+                            text: data.message,
+                            title: data.title,
+                            timer: 1500,
+                            showConfirmButton: false,
+                        });
+                        $("#modal_edit_sub_barang").modal('hide');
+                        $('#dataTableSubBarang').DataTable().ajax.reload();
+                        $('#edit_sub_barang')[0].reset();
+                        $("#btn_edit_sub_barang").text('Simpan');
+                        $(document).find('span.error-text').empty();
+                    } else {
+                        $.each(data.error, function(prefix, val) {
+                            $('span.' + prefix + '_error').text(val[0]);
+                        });
+                    }
+
+                }
+            });
+        });
 
         // akhir edit sub barang
 

@@ -300,7 +300,6 @@ class BarangController extends Controller
 
     public function update_sub_barang(Request $request)
     {
-
         $sub_barang = SubBarang::find($request->id);
         $sub_barang->barang_id = $request->barang_id;
         $sub_barang->sub_barang = $request->sub_barang;
