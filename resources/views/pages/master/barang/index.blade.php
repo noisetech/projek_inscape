@@ -356,14 +356,14 @@
                         <div class="mb-3">
                             <label for="" class="form-label">Parameter Barang:</label> <sup
                                 class="text-danger">*</sup>
-                            <input type="text" name="parameter" class="form-control">
+                            <input type="text" name="parameter" class="form-control parameter">
                             <span class="text-danger error-text parameter_error"></span>
                         </div>
 
                         <div class="mb-3">
                             <label for="" class="form-label">Bobot Parameter:</label> <sup
                                 class="text-danger">*</sup>
-                            <input type="text" name="bobot" class="form-control">
+                            <input type="text" name="bobot" class="form-control bobot">
                             <span class="text-danger error-text bobot_error"></span>
                         </div>
 
@@ -377,7 +377,24 @@
             </div>
         </div>
     </div>
-    {{-- akhir modal parameter --}}
+    {{-- akhir modal tambah parameter --}}
+
+    {{-- modal edit parameter --}}
+    <div id="modal_edit_parameter_barang" class="modal fade" tabindex="-1" role="dialog"
+        aria-labelledby="fullWidthModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="fullWidthModalLabel">Edit Parameter Barang</h4>
+                    <button type="button" class="btn-close" id="close_atas_edit_parameter_barang"></button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- akhir modal edit parameter --}}
 @endsection
 
 @push('script')
@@ -999,15 +1016,24 @@
             });
         });
 
+        // bagian close modal data parameter barang
         $(document).on('click', '#close_atas_parameter_barang', function(e) {
             $("#modal_parameter_barang").modal('hide');
             $('#dataTableParameter').DataTable().ajax.reload();
+            $("#btn_tambah_parameter_barang").text('Simpan');
+            $(".parameter").val("");
+            $(".bobot").val("");
+            $(document).find('span.error-text').empty();
         });
 
 
         $('#modal_parameter_barang').on('hidden.bs.modal', function(e) {
             $("#modal_parameter_barang").modal('hide');
             $('#dataTableParameter').DataTable().ajax.reload();
+            $("#btn_tambah_parameter_barang").text('Simpan');
+            $(".parameter").val("");
+            $(".bobot").val("");
+            $(document).find('span.error-text').empty();
         });
 
         // bagian close modal tambah parameter barang
@@ -1016,6 +1042,9 @@
             $("#modal_parameter_barang").modal('hide');
             $('#dataTableParameter').DataTable().ajax.reload();
             $("#btn_tambah_parameter_barang").text('Simpan');
+            $("#nama_barang_pada_tambah_parameter_barang").val("");
+            $(".parameter").val("");
+            $(".bobot").val("");
             $(document).find('span.error-text').empty();
         });
 
@@ -1033,6 +1062,15 @@
             $("#btn_tambah_parameter_barang").text('Simpan');
             $(document).find('span.error-text').empty();
         });
+
+        // bagian edit parameter
+        $(document).on('click', '.edit_parameter', function(e) {
+            e.preventDefault();
+
+            $('#modal_parameter_barang').modal('hide');
+
+            $('#modal_edit_parameter_barang').modal('show');
+        })
 
         $(document).on('click', '.hapus_parameter', function(e) {
             e.preventDefault();
