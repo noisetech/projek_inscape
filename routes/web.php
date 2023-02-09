@@ -155,7 +155,7 @@ Route::prefix('dashboard')
         // akhir bagian route sub_barang
 
         Route::get('parameter.data', 'BarangController@data_parameter')
-        ->name('parameter.data');
+            ->name('parameter.data');
         Route::get('barang/tambahparameter/{slug}', 'BarangController@create_parameter_barang')
             ->name('barang.createparameter');
         Route::post('parameter_barang.store', 'BarangController@store_parameter_barang')
@@ -164,6 +164,8 @@ Route::prefix('dashboard')
             ->name('paramter.create_spesifikasi_parameter');
         Route::post('parameter.destroy', 'BarangController@hapus_parameter')
             ->name('hapus_parameter');
+        Route::get('parameterById', 'BarangController@parameterById')
+            ->name('parameterById');
 
         Route::post('spesifikasi_parameter.store', 'BarangController@store_spesifikasi_parameter')
             ->name('spesifikasi_parameter.store');
@@ -173,8 +175,7 @@ Route::prefix('dashboard')
             ->name('spesifikasi_parameter.update');
         Route::post('spesifikasi_parameter.destroy', 'BarangController@hapus_spesifikasi_parameter')
             ->name('hapus_spesifikasi_parameter');
-        Route::get('paramater/edit/{slug}', 'BarangController@edit_parameter_barang')
-            ->name('edit_parameter_barang');
+
         Route::post('paramater.update', 'BarangController@updateParameterBarang')
             ->name('paramater.update');
 

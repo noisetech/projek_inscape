@@ -405,14 +405,15 @@ class BarangController extends Controller
         }
     }
 
-    public function edit_parameter_barang($slug)
+    public function parameterById(Request $request)
     {
-
-        $parameter = ParameterBarang::where('slug', $slug)->first();
-
-        return view('pages.master.barang.edit_parameter', [
-            'parameter' => $parameter
-        ]);
+        $parameter = DB::table('parameter_barang')
+            ->select('barang.id as id_barang',
+             'barang.nama_barang as nama_barang',
+             'parameter_barang.id as id_parameter_barang', 'parameter_barang.parameter as parameter')
+            ->join('barang', 'barang.id', '=', 'parameter_barang.barang_id')
+            ->where('parameter_barang.id', $request->id)->first();
+        return response()->json($parameter);
     }
 
     public function updateParameterBarang(Request $request)

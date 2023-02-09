@@ -389,7 +389,29 @@
                     <button type="button" class="btn-close" id="close_atas_edit_parameter_barang"></button>
                 </div>
                 <div class="modal-body">
+                    <form action="#" id="edit_parameter" method="POST">
+                        @csrf
 
+                        <input type="text" name="barang_id" id="barang_id_edit_parameter">
+
+                        <input type="text" name="id" id="id_parameter_edit_parameter">
+
+                        <div class="mb-3">
+                            <label for="">Nama Barang</label>
+                            <input type="text" id="nama_barang" class="form-control" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="" class="form-label">Parameter</label>
+                            <input type="text" name="parameter" id="parameter_edit" class="form-control">
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label for="" class="form-label">Bobot</label>
+                            <input type="text" name="bobot" id="bobot_edit" class="form-control">
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -1070,7 +1092,21 @@
             $('#modal_parameter_barang').modal('hide');
 
             $('#modal_edit_parameter_barang').modal('show');
-        })
+
+            let id = $(this).attr('id');
+            $.ajax({
+                url: '{{ route('parameterById') }}',
+                method: 'get',
+                data: {
+                    id: id,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(data) {
+                $('#barang_id_edit_parameter').val(data.id_barang)
+
+                }
+            });
+        });
 
         $(document).on('click', '.hapus_parameter', function(e) {
             e.preventDefault();
