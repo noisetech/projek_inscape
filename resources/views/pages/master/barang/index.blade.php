@@ -259,7 +259,7 @@
                         @csrf
 
 
-                        <input type="hidden" name="id" id="id" class="form-control" readonly>
+                        <input type="hidden" name="id" id="id_sub_barang_edit" class="form-control" readonly>
 
                         <input type="hidden" name="barang_id" id="id_barang_pada_edit_sub_barang" class="form-control"
                             readonly>
@@ -424,6 +424,152 @@
         </div>
     </div>
     {{-- akhir modal edit parameter --}}
+
+
+
+    {{-- awal modal data spesifikasi parameter --}}
+
+    <div id="modal_spesifikasi_parameter" class="modal fade" tabindex="-1" role="dialog"
+        aria-labelledby="fullWidthModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-full-width">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="fullWidthModalLabel">Spesifikasi Parameter</h4>
+                    <button type="button" class="btn-close" id="close_atas_spesifikasi_parameter"></button>
+                </div>
+
+                <div class="row mt-2 mx-2">
+                    <div class="col-sm-4">
+                        <button class="btn btn-sm btn-primary" id="bahan_id_parameter_untuk_tambah_spesifikasi_parameter"
+                            data-id="">
+                            <i class="uil-plus-circle"></i> Tambah Spesifikasi Parameter
+                        </button>
+                    </div>
+                </div>
+
+
+                <div class="modal-body">
+                    <div class="table table-responsive">
+                        <table class="table datatables dt-responsive nowrap" style="width: 100%";
+                            id="dataTableSpesifikasiParameter" role="grid" aria-describedby="dataTable-1_info">
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Spesifikasi</th>
+                                    <th>Level</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- akhir modal data spesifikasi parameter --}}
+
+
+    {{-- awal modal tambah spesifikasi parameter --}}
+    <div id="modal_tambah_spesifikasi_parameter" class="modal fade" tabindex="-1" role="dialog"
+        aria-labelledby="fullWidthModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="fullWidthModalLabel">Tambah Spesifikasi Parameter</h4>
+                    <button type="button" class="btn-close" id="close_atas_tambah_spesifikasi_parameter"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="#" method="POST" id="tambah_spesifikasi_parameter" enctype="multipart/form-data">
+                        @csrf
+
+                        <input type="hidden" name="parameter_barang_id"
+                            id="id_parameter_barang_pada_tambah_sepsifikasi_parameter" class="form-control" readonly>
+
+                        <div class="mb-3">
+                            <label for="" class="form-label">Nama Parameter:</label> <sup
+                                class="text-danger">*</sup>
+                            <input type="text" id="nama_paramater_pada_tambah_spesifikasi_parameter"
+                                class="form-control" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="" class="form-label">Spesifikasi:</label> <sup
+                                class="text-danger">*</sup>
+                            <input type="text" name="spesifikasi" class="form-control parameter">
+                            <span class="text-danger error-text spesifikasi_error"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="" class="form-label">level:</label> <sup class="text-danger">*</sup>
+                            <input type="text" name="level" class="form-control bobot">
+                            <span class="text-danger error-text level_error"></span>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light"
+                                id="close_bawah_tambah_spesifikasi_parameter">Batal</button>
+                            <button type="submit" class="btn btn-primary"
+                                id="btn_tambah_spesifikasi_parameter">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- akhir modal tambah spesifikasi parameter --}}
+
+    {{-- awal modal edit spesifikasi parameter --}}
+    <div id="modal_edit_spesifikasi_parameter" class="modal fade" tabindex="-1" role="dialog"
+        aria-labelledby="fullWidthModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="fullWidthModalLabel">Edit Spesifikasi Parameter</h4>
+                    <button type="button" class="btn-close" id="close_atas_tambah_spesifikasi_parameter"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="#" method="POST" id="update_spesifikasi_parameter" enctype="multipart/form-data">
+                        @csrf
+
+                        <input type="hidden" name="id" id="id_spesifikasi_parameter_edit">
+
+                        <input type="hidden" name="parameter_barang_id"
+                            id="id_parameter_barang_pada_edit_sepsifikasi_parameter" class="form-control" readonly>
+
+                        <div class="mb-3">
+                            <label for="" class="form-label">Nama Parameter:</label> <sup
+                                class="text-danger">*</sup>
+                            <input type="text" id="nama_paramater_pada_edit_spesifikasi_parameter"
+                                class="form-control" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="" class="form-label">Spesifikasi:</label> <sup
+                                class="text-danger">*</sup>
+                            <input type="text" name="spesifikasi" class="form-control parameter"
+                                id="spesifikasi_edit">
+                            <span class="text-danger error-text spesifikasi_error"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="" class="form-label">level:</label> <sup class="text-danger">*</sup>
+                            <input type="text" name="level" class="form-control" id="level_edit">
+                            <span class="text-danger error-text level_error"></span>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light"
+                                id="close_bawah_edit_spesifikasi_parameter">Batal</button>
+                            <button type="submit" class="btn btn-primary"
+                                id="btn_edit_spesifikasi_parameter">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- akhir modal edit spesifikasi parameter --}}
 @endsection
 
 @push('script')
@@ -844,10 +990,13 @@
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(data) {
-                    $('#id').val(data.sub_barang_id);
+                    console.log(data);
+
                     $('#id_barang_pada_edit_sub_barang').val(data.barang_id);
-                    $('#nama_barang_pada_edit_sub_barang').val(data.nama_barang.toUpperCase());
-                    $('#nama_sub_barang_pada_edit_sub_barang').val(data.sub_barang.toUpperCase());
+                    $('#id_sub_barang_edit').val(data.sub_barang_id);
+                    $('#nama_barang_pada_edit_sub_barang').val(data.nama_barang);
+                    $('#nama_sub_barang_pada_edit_sub_barang').val(data.sub_barang);
+
                 }
             });
         })
@@ -1227,5 +1376,276 @@
                 }
             })
         });
+
+
+        // bagian spesifikasi parameter
+        $(document).on('click', '.spesifikasi_parameter', function(e) {
+            e.preventDefault();
+
+            let parameter_id = $(this).attr('id');
+
+            $('#modal_parameter_barang').modal('hide');
+
+            $('#modal_spesifikasi_parameter').modal('show');
+
+            $('#dataTableSpesifikasiParameter').DataTable({
+                destroy: true,
+                serverSide: true,
+                processing: true,
+                order: [],
+                ajax: {
+                    url: "{{ route('data_spesifikasi_parameter') }}",
+                    data: {
+                        parameter_id: parameter_id
+                    },
+                },
+                columns: [{
+                        data: 'parameter',
+                        name: 'parameter',
+                    },
+                    {
+                        data: 'spesifikasi',
+                        name: 'spesifikasi',
+                    },
+                    {
+                        data: 'level',
+                        name: 'level'
+                    },
+                    {
+                        data: 'aksi',
+                        name: 'aksi',
+                    },
+                ]
+            });
+
+            $('#bahan_id_parameter_untuk_tambah_spesifikasi_parameter').attr('data-id', parameter_id);
+        });
+
+
+        // tambah spesifikasi parameter
+        $(document).on('click', '#bahan_id_parameter_untuk_tambah_spesifikasi_parameter', function(e) {
+
+
+            $('#modal_spesifikasi_parameter').modal('hide');
+
+            let parameter_id = $(this).attr('data-id');
+
+            $.ajax({
+                url: '{{ route('parameterById') }}',
+                method: 'get',
+                data: {
+                    id: parameter_id,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#id_parameter_barang_pada_tambah_sepsifikasi_parameter').val(data
+                        .id_parameter_barang);
+                    $('#nama_paramater_pada_tambah_spesifikasi_parameter').val(data.parameter);
+
+                }
+            });
+
+            $('#modal_tambah_spesifikasi_parameter').modal('show');
+        });
+
+        // bagian tambah spesifikasi parameter
+        $("#tambah_spesifikasi_parameter").submit(function(e) {
+            e.preventDefault();
+            const fd = new FormData(this);
+            $.ajax({
+                url: '{{ route('spesifikasi_parameter.store') }}',
+                method: 'post',
+                data: fd,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+                contentType: false,
+                beforeSend: function() {
+                    $(document).find('span.error-text').text('');
+                },
+                success: function(data) {
+                    if (data.status == 'success') {
+                        Swal.fire({
+                            icon: data.status,
+                            text: data.message,
+                            title: data.title,
+                            timer: 1500,
+                            showConfirmButton: false,
+                        });
+                        $("#modal_edit_parameter_barang").modal('hide');
+                        $('#dataTableParameter').DataTable().ajax.reload();
+                        $("#btn_edit_parameter_barang").text('Simpan');
+                        $(document).find('span.error-text').empty();
+                    } else {
+                        $.each(data.error, function(prefix, val) {
+                            $('span.' + prefix + '_error').text(val[0]);
+                        });
+                    }
+
+                }
+            });
+        });
+
+        // bagian close modal tambah parameter barang
+
+        $(document).on('click', '#close_atas_tambah_spesifikasi_parameter', function(e) {
+            $("#modal_tambah_spesifikasi_parameter").modal('hide');
+            $('#dataTableSpesifikasiParameter').DataTable().ajax.reload();
+            $("#btn_tambah_spesifikasi_parameter").text('Simpan');
+            $(document).find('span.error-text').empty();
+        });
+
+        $(document).on('click', '#close_bawah_tambah_spesifikasi_parameter', function(e) {
+            $("#modal_tambah_spesifikasi_parameter").modal('hide');
+            $('#dataTableSpesifikasiParameter').DataTable().ajax.reload();
+            $("#btn_tambah_spesifikasi_parameter").text('Simpan');
+            $(document).find('span.error-text').empty();
+        });
+
+
+        $('#modal_tambah_spesifikasi_parameter').on('hidden.bs.modal', function(e) {
+            $("#modal_tambah_spesifikasi_parameter").modal('hide');
+            $('#dataTableSpesifikasiParameter').DataTable().ajax.reload();
+            $("#btn_tambah_spesifikasi_parameter").text('Simpan');
+            $(document).find('span.error-text').empty();
+        });
+        // akhir bagian tambah spesifikasi parameter
+
+
+        // edit spesifikasi parameter
+
+
+        $(document).on('click', '#close_atas_edit_spesifikasi_parameter', function(e) {
+            $("#modal_edit_spesifikasi_parameter").modal('hide');
+            $('#dataTableSpesifikasiParameter').DataTable().ajax.reload();
+            $("#btn_edit_spesifikasi_parameter").text('Simpan');
+            $(document).find('span.error-text').empty();
+        });
+
+        $(document).on('click', '#close_bawah_edit_spesifikasi_parameter', function(e) {
+            $("#modal_edit_spesifikasi_parameter").modal('hide');
+            $('#dataTableSpesifikasiParameter').DataTable().ajax.reload();
+            $("#btn_edit_spesifikasi_parameter").text('Simpan');
+            $(document).find('span.error-text').empty();
+        });
+
+
+        $('#modal_edit_spesifikasi_parameter').on('hidden.bs.modal', function(e) {
+            $("#modal_edit_spesifikasi_parameter").modal('hide');
+            $('#dataTableSpesifikasiParameter').DataTable().ajax.reload();
+            $("#btn_edit_spesifikasi_parameter").text('Simpan');
+            $(document).find('span.error-text').empty();
+        });
+
+
+
+        $(document).on('click', '.edit_spesifikasi_parameter', function(e) {
+
+            $('#modal_spesifikasi_parameter').modal('hide');
+            $('#modal_edit_spesifikasi_parameter').modal('show');
+            let id = $(this).attr('id');
+
+            $.ajax({
+                url: '{{ route('spesifikasiParameterById') }}',
+                method: 'get',
+                data: {
+                    id: id,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#id_spesifikasi_parameter_edit').val(data.id_spesifikasi_parameter);
+                    $('#id_parameter_barang_pada_edit_sepsifikasi_parameter').val(data
+                        .id_parameter_barang);
+                    $('#nama_paramater_pada_edit_spesifikasi_parameter').val(data.parameter_barang);
+                    $('#spesifikasi_edit').val(data.spesifikasi);
+                    $('#level_edit').val(data.level);
+                }
+            });
+        });
+
+        $("#update_spesifikasi_parameter").submit(function(e) {
+            e.preventDefault();
+            const fd = new FormData(this);
+            $.ajax({
+                url: '{{ route('spesifikasi_parameter.update') }}',
+                method: 'post',
+                data: fd,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+                contentType: false,
+                beforeSend: function() {
+                    $(document).find('span.error-text').text('');
+                },
+                success: function(data) {
+                    if (data.status == 'success') {
+                        Swal.fire({
+                            icon: data.status,
+                            text: data.message,
+                            title: data.title,
+                            timer: 1500,
+                            showConfirmButton: false,
+                        });
+                        $("#modal_edit_spesifikasi_parameter").modal('hide');
+                        $('#dataTableSpesifikasiParameter').DataTable().ajax.reload();
+                        $("#btn_edit_spesifikasi_parameter").text('Simpan');
+                        $(document).find('span.error-text').empty();
+                    } else {
+                        $.each(data.error, function(prefix, val) {
+                            $('span.' + prefix + '_error').text(val[0]);
+                        });
+                    }
+
+                }
+            });
+        });
+        // akhir edit spesifikasi parameter
+
+        // hapus spesifikasi parameter
+        $(document).on('click', '.hapus_spesifikasi_parameter', function(e) {
+            e.preventDefault();
+
+            let id = $(this).attr('id');
+            // console.log(id);
+            Swal.fire({
+                title: 'Anda ingin menghapus data?',
+                text: "Data telah dihapus tidak bisa di kembalikan!",
+                icon: 'warning',
+                confirmButton: true,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('hapus_spesifikasi_parameter') }}",
+                        data: {
+                            id: id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(data) {
+                            if (data.status == 'success') {
+                                Swal.fire({
+                                    icon: data.status,
+                                    text: data.message,
+                                    title: data.title,
+                                    toast: true,
+                                    position: 'top-end',
+                                    timer: 3000,
+                                    showConfirmButton: false,
+                                });
+                                $('#dataTableSpesifikasiParameter').DataTable().ajax.reload();
+                            }
+                        },
+                    })
+                }
+            })
+        });
+        // akhir hapus spesifikasi parameter
     </script>
 @endpush

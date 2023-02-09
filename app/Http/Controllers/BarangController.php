@@ -358,7 +358,7 @@ class BarangController extends Controller
 
                 $button .= ' <div class="dropdown-menu">
         <a class="dropdown-item edit_parameter" href="#" id="' . $data->id . '"><i class="uil-pen"></i><span> Ubah </span></a>';
-
+                $button .= '<a class="dropdown-item spesifikasi_parameter" id="' . $data->id . '" href="#"><i class="uil-trash-alt"></i><span> Spesifikasi Parameter </span></a>';
                 $button .= '<a class="dropdown-item hapus_parameter" id="' . $data->id . '" href="#"><i class="uil-trash-alt"></i><span> Hapus </span></a>
             </div>
         </div>';
@@ -468,7 +468,43 @@ class BarangController extends Controller
         }
     }
 
+    public function data_spesifikasi_parameter(Request $request)
+    {
+        if (request()->ajax()) {
 
+            $data = DB::table('spesifikasi_parameter')
+                ->select(
+                    'spesifikasi_parameter.id as id_spesifikasi_parameter',
+                    'spesifikasi_parameter.spesifikasi as spesifikasi',
+                    'spesifikasi_parameter.level as level',
+                    'parameter_barang.id as id_parameter_barang',
+                    'parameter_barang.parameter as parameter'
+                )
+                ->join('parameter_barang', 'parameter_barang.id', '=', 'spesifikasi_parameter.parameter_barang_id')
+                ->where('spesifikasi_parameter.parameter_barang_id', $request->parameter_id)
+                ->get();
+
+            return datatables()->of($data)
+                ->addColumn('parameter', function ($data) {
+                    return $data->parameter;
+                })
+                ->addColumn('aksi', function ($data) {
+                    $button = '<div class="btn-group mb-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>';
+
+                    $button .= ' <div class="dropdown-menu">
+                <a class="dropdown-item edit_spesifikasi_parameter" href="#" id="' . $data->id_spesifikasi_parameter . '"><i class="uil-pen"></i><span> Ubah </span></a>';
+                    $button .= '<a class="dropdown-item hapus_spesifikasi_parameter" id="' . $data->id_spesifikasi_parameter . '" href="#"><i class="uil-trash-alt"></i><span> Hapus </span></a>
+                    </div>
+                </div>';
+
+
+                    return $button;
+                })
+                ->rawColumns(['aksi', 'parameter'])
+                ->make('true');
+        }
+    }
 
     public function create_spesifikasi_parameter($slug)
     {
@@ -481,6 +517,23 @@ class BarangController extends Controller
 
     public function store_spesifikasi_parameter(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'parameter_barang_id' => 'required',
+            'spesifikasi' => 'required',
+            'level' => 'required',
+        ], [
+            'parameter_barang_id.required' => 'tidak boleh kosong',
+            'spesifikasi.required' => 'tidak boleh kosong',
+            'level.required' => 'tidak boleh kosong'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'error' => $validator->errors()->toArray()
+            ]);
+        }
+
         $spesifikasi_parameter = new SpesifikasiParameter();
         $spesifikasi_parameter->parameter_barang_id = $request->parameter_barang_id;
         $spesifikasi_parameter->spesifikasi = $request->spesifikasi;
@@ -497,19 +550,43 @@ class BarangController extends Controller
         }
     }
 
-    public function edit_spesifikasi_paremeter($slug)
+    public function spesifikasiParameterById(Request $request)
     {
-        $spesifikasi_parameter = SpesifikasiParameter::where('slug', $slug)->first();
+        $spesifikasi_parameter =  DB::table('spesifikasi_parameter')
+            ->select(
+                'spesifikasi_parameter.id as id_spesifikasi_parameter',
+                'spesifikasi_parameter.spesifikasi as spesifikasi',
+                'spesifikasi_parameter.level as level',
+                'parameter_barang.id as id_parameter_barang',
+                'parameter_barang.parameter as parameter_barang'
+            )
+            ->join('parameter_barang', 'parameter_barang.id', '=', 'spesifikasi_parameter.parameter_barang_id')
+            ->where('spesifikasi_parameter.id', $request->id)
+            ->first();
 
-        // dd($spesifikasi_parameter);
-
-        return view('pages.master.barang.edit_sepesifikasi_parameter_barang', [
-            'spesifikasi_parameter' => $spesifikasi_parameter
-        ]);
+        return response()->json($spesifikasi_parameter);
     }
 
     public function update_spesfikasi_parameter(Request $request)
     {
+
+        $validator = Validator::make($request->all(), [
+            'parameter_barang_id' => 'required',
+            'spesifikasi' => 'required',
+            'level' => 'required',
+        ], [
+            'parameter_barang_id.required' => 'tidak boleh kosong',
+            'spesifikasi.required' => 'tidak boleh kosong',
+            'level.required' => 'tidak boleh kosong'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'error' => $validator->errors()->toArray()
+            ]);
+        }
+
         $spesifikasi_parameter = SpesifikasiParameter::find($request->id);
         $spesifikasi_parameter->parameter_barang_id = $request->parameter_barang_id;
         $spesifikasi_parameter->level = $request->level;

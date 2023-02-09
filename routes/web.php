@@ -167,10 +167,12 @@ Route::prefix('dashboard')
         Route::get('parameterById', 'BarangController@parameterById')
             ->name('parameterById');
 
+        Route::get('data_spesifikasi_parameter', 'BarangController@data_spesifikasi_parameter')
+            ->name('data_spesifikasi_parameter');
         Route::post('spesifikasi_parameter.store', 'BarangController@store_spesifikasi_parameter')
             ->name('spesifikasi_parameter.store');
-        Route::get('spesifikasi_parameter/edit/{slug}', 'BarangController@edit_spesifikasi_paremeter')
-            ->name('spesfiikasi_parameter.edit');
+        Route::get('spesifikasiParameterById', 'BarangController@spesifikasiParameterById')
+            ->name('spesifikasiParameterById');
         Route::post('spesifikasi_parameter.update', 'BarangController@update_spesfikasi_parameter')
             ->name('spesifikasi_parameter.update');
         Route::post('spesifikasi_parameter.destroy', 'BarangController@hapus_spesifikasi_parameter')
